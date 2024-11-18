@@ -1,0 +1,307 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Belief and Experience Questionnaire</title>
+    <link rel="stylesheet" href="questionnaireStyles.css">
+    <style>
+        /* Disabled button styling */
+        .btn:disabled {
+            background-color: #CCCCCC;
+            color: #666666;
+            cursor: not-allowed;
+            opacity: 0.7;
+        }
+    </style>    
+</head>
+<button id="abortButton" onclick="abortStudy()">Abort Study</button>
+<body>
+    <div class="container">
+        <h1>Belief and Experience Questionnaire</h1>
+        
+        <div id="questionnaire-container"></div>
+
+        <div id="confirmation-page" class="page">
+            <h2>Are you sure you want to submit?</h2>
+            <button id="confirm-submit-btn" class="btn">Submit</button>
+            <button id="go-back-btn" class="btn">No, go back</button>
+        </div>
+    </div>
+    <script src="jatos.js"></script>
+    <script>
+
+        let participantID = null;
+        jatos.onLoad(() => {
+        console.log("Session Data:", jatos.sessionData);
+        participantID = jatos.sessionData?.participantID || 'test';
+        if (participantID !== 'test') {
+            console.log("Participant ID from session data:", participantID);
+        } else {
+            console.warn("Session data or Participant ID is not set. Using fallback ID:", participantID);
+        }
+    });
+
+        const startTime = performance.now();
+        let answers = {};
+        const questions = [
+        { id: 1, text: "Have you ever had the sense that some person or force is around you, even though you cannot see anyone?", factor: "Cognitive-Perceptual" },
+        { id: 2, text: "Are you sometimes sure that other people can tell what you are thinking?", factor: "Cognitive-Perceptual" },
+        { id: 3, text: "Have you ever noticed a common event or object that seemed to be a special sign for you?", factor: "Cognitive-Perceptual" },
+        { id: 4, text: "Do you often pick up hidden threats or put-downs from what people say or do?", factor: "Cognitive-Perceptual" },
+        { id: 5, text: "When shopping do you get the feeling that other people are taking notice of you?", factor: "Cognitive-Perceptual" },
+        { id: 6, text: "Have you had experiences with astrology, seeing the future, UFOs, ESP, or a sixth sense?", factor: "Cognitive-Perceptual" },
+        { id: 7, text: "Do you ever suddenly feel distracted by distant sounds that you are not normally aware of?", factor: "Cognitive-Perceptual" },
+        { id: 8, text: "Do you often have to keep an eye out to stop people from taking advantage of you?", factor: "Cognitive-Perceptual" },
+        { id: 9, text: "People sometimes find me aloof and distant.", factor: "Interpersonal" },
+        { id: 10, text: "I feel I have to be on my guard even with friends.", factor: "Interpersonal" },
+        { id: 11, text: "I feel very uncomfortable in social situations involving unfamiliar people.", factor: "Interpersonal" },
+        { id: 12, text: "Have you found that it is best not to let other people know too much about you?", factor: "Interpersonal" },
+        { id: 13, text: "I tend to keep in the background on social occasions.", factor: "Interpersonal" },
+        { id: 14, text: "Do you feel that you are unable to get \"close\" to people?", factor: "Interpersonal" },
+        { id: 15, text: "I feel very uneasy talking to people I do not know well.", factor: "Interpersonal" },
+        { id: 16, text: "I tend to keep my feelings to myself.", factor: "Interpersonal" },
+        { id: 17, text: "People sometimes comment on my unusual mannerisms and habits.", factor: "Disorganized" },
+        { id: 18, text: "Some people think that I am a very bizarre person.", factor: "Disorganized" },
+        { id: 19, text: "Some people find me a bit vague and elusive during a conversation.", factor: "Disorganized" },
+        { id: 20, text: "I sometimes use words in unusual ways.", factor: "Disorganized" },
+        { id: 21, text: "I am an odd, unusual person.", factor: "Disorganized" },
+        { id: 22, text: "I find it hard to communicate clearly what I want to say to people.", factor: "Disorganized" }
+        ];
+
+        const options = [
+            { value: "yes", label: "Yes" },
+            { value: "no", label: "No" }
+        ];
+
+        const attentionChecks = [
+            { id: "AC1", text: "This is an attention check, please select Yes to continue.", correct: "yes" },
+            { id: "AC2", text: "I was not born on the planet Earth. I was born on the planet Mars.", correct: "no" }
+        ];
+
+        const scoreMapping = {
+            "yes": 1,
+            "no": 0
+        };
+
+        const questionsPerPage = 4;
+        let currentPage = 0;
+        const totalPages = Math.ceil(questions.length / questionsPerPage);
+
+        function scrollToTop() {
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        function showPage(pageIndex) {
+            document.querySelectorAll('.page').forEach(page => page.classList.remove('active'));
+            document.getElementById(`page${pageIndex + 1}`).classList.add('active');
+            currentPage = pageIndex;
+            scrollToTop(); 
+        }
+
+        function insertAttentionChecks() {
+            const questionsCopy = [...questions];
+            const totalQuestions = questionsCopy.length;
+            const shuffledAttentionChecks = attentionChecks.sort(() => Math.random() - 0.5); // Shuffle attention checks
+
+            shuffledAttentionChecks.forEach((check) => {
+                const randomIndex = Math.floor(Math.random() * totalQuestions);
+                questionsCopy.splice(randomIndex, 0, check); // Insert each attention check at a random position
+            });
+
+            return questionsCopy;
+        }
+
+        const randomizedQuestions = insertAttentionChecks();
+
+
+        function createQuestionPages() {
+            const container = document.getElementById('questionnaire-container');
+            for (let i = 0; i < totalPages; i++) {
+                const pageDiv = document.createElement('div');
+                pageDiv.classList.add('page');
+                if (i === 0) pageDiv.classList.add('active');
+                pageDiv.id = `page${i + 1}`;
+
+                const start = i * questionsPerPage;
+                const end = start + questionsPerPage;
+                const pageQuestions = randomizedQuestions.slice(start, end);
+
+                pageQuestions.forEach((question) => {
+                    const questionContainer = document.createElement('div');
+                    questionContainer.classList.add('question-container');
+
+                    const questionDiv = document.createElement('div');
+                    questionDiv.classList.add('question');
+                    questionDiv.innerHTML = `${question.text}`;
+                    questionContainer.appendChild(questionDiv);
+
+                    const buttonGroup = document.createElement('div');
+                    buttonGroup.classList.add('button-group');
+                    options.forEach(option => {
+                        const button = document.createElement('button');
+                        button.classList.add('btn-option');
+                        button.textContent = option.label;
+                        button.onclick = () => {
+                            selectAnswer(question.id, option.value, button);
+                            updateNextButtonState(start, end, nextBtn); // Check if "Next" can be enabled
+                        };
+                        buttonGroup.appendChild(button);
+                    });
+                    questionContainer.appendChild(buttonGroup);
+                    pageDiv.appendChild(questionContainer);
+                });
+
+                const navDiv = document.createElement('div');
+                navDiv.classList.add('navigation');
+
+                // Placeholder for the Previous Button (to maintain alignment)
+                const prevPlaceholder = document.createElement('div');
+                prevPlaceholder.classList.add('btn-placeholder'); // Style this to take the same space as a button
+                navDiv.appendChild(prevPlaceholder);
+
+                // Create Next Button
+                const nextBtn = document.createElement('button');
+                nextBtn.classList.add('btn');
+                nextBtn.textContent = i < totalPages - 1 ? "Next" : "Submit";
+                nextBtn.disabled = true; // Initially disabled
+                nextBtn.onclick = () => {
+                    if (i < totalPages - 1) {
+                        showPage(i + 1);
+                    } else {
+                        submitData();
+                    }
+                };
+                navDiv.appendChild(nextBtn);
+
+                pageDiv.appendChild(navDiv);
+                container.appendChild(pageDiv);
+            }
+        }
+
+        function updateNextButtonState(startIndex, endIndex, nextBtn) {
+            const allAnswered = areAllQuestionsAnswered(startIndex, endIndex);
+            nextBtn.disabled = !allAnswered; 
+        }
+
+        function areAllQuestionsAnswered(startIndex, endIndex) {
+            for (let i = startIndex; i < endIndex; i++) {
+                const questionId = randomizedQuestions[i].id;
+                if (!answers[questionId]) {
+                    return false;
+                }
+            }
+            return true;
+        }
+
+
+
+
+        function selectAnswer(questionId, value, selectedButton) {
+            answers[questionId] = value; 
+
+            const attentionCheck = attentionChecks.find(check => check.id === questionId);
+            if (attentionCheck) {
+                const isCorrect = value === attentionCheck.correct;
+                if (!isCorrect) {
+                    answers['attentionFails'] = (answers['attentionFails'] || 0) + 1; 
+                }
+            }
+
+            // Update UI for the selected button
+            const buttonGroup = selectedButton.parentNode;
+            buttonGroup.querySelectorAll('button').forEach(button => {
+                button.classList.remove('pressed');
+            });
+            selectedButton.classList.add('pressed');
+
+            // Mark question as answered
+            const questionContainer = selectedButton.closest('.question-container');
+            questionContainer.classList.add('answered');
+        }
+
+
+        function goToConfirmation() {
+            document.querySelectorAll('.page').forEach(page => page.classList.remove('active'));
+            document.getElementById('confirmation-page').classList.add('active');
+            scrollToTop(); // Added scroll to top when going to confirmation page
+        }
+
+        function submitData() {
+            const endTime = performance.now();
+            const timeTaken = (endTime - startTime) / 1000;
+            const data = {};
+            data['participantID'] = participantID;
+            let totalScore = 0;
+            const factorScores = {};
+            let unansweredQuestions = [];
+
+            const spqData = [];
+            const attentionCheckData = [];
+
+            randomizedQuestions.forEach((question) => {
+                const selectedOption = answers[question.id];
+                if (!attentionChecks.some(check => check.id === question.id)) {
+                    const score = selectedOption ? scoreMapping[selectedOption] : null;
+                    if (score !== null) {
+                        totalScore += score;
+                        if (!factorScores[question.factor]) {
+                            factorScores[question.factor] = 0;
+                        }
+                        factorScores[question.factor] += score;
+                    } else {
+                        unansweredQuestions.push(question.id);
+                    }
+                    spqData.push({ [`spq${question.id}`]: score }); // Store SPQ data
+                } else {
+                    attentionCheckData.push({ [`attentionCheck${question.id}`]: selectedOption }); // Store attention checks
+                }
+            });
+
+            if (unansweredQuestions.length > 0) {
+                alert(`Please answer all questions before submitting. Unanswered questions: ${unansweredQuestions.join(', ')}`);
+                const firstUnansweredPage = Math.floor((unansweredQuestions[0] - 1) / questionsPerPage);
+                showPage(firstUnansweredPage);
+                return;
+            }
+
+            data['spq_total_score'] = totalScore;
+            data['spq_factor_scores'] = factorScores;
+            data['attentionFails'] = answers['attentionFails'] || 0; 
+
+            // Merge SPQ and attention check data into the final JSON
+            const finalData = {
+                ...data,
+                spqData: spqData,
+                attentionCheckData: attentionCheckData,
+                spqb_time: timeTaken
+            };
+
+            console.log("Submitting data:", JSON.stringify(finalData));
+            jatos.submitResultData(JSON.stringify(finalData)).then(() => {
+                console.log('Data submitted successfully');
+                jatos.startNextComponent();
+            }).catch((error) => {
+                console.error("Submission error:", error);
+            });
+        }
+
+
+
+        document.getElementById('confirm-submit-btn').addEventListener('click', submitData);
+        document.getElementById('go-back-btn').addEventListener('click', () => {
+            showPage(currentPage);
+            scrollToTop(); 
+        });
+
+        createQuestionPages();
+
+        function abortStudy() {
+            if (confirm("Are you sure you want to abort the study? You will be redirected to Prolific and marked as incomplete.")) {
+                const redirectUrl = 'https://app.prolific.com/submissions/complete?cc=CXOPFIDH';
+                jatos.endStudyAndRedirect(redirectUrl);
+            }
+        }
+    </script>
+</body>
+</html>

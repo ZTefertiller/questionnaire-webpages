@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        body {
+            font-family: 'Opendyslexic', Geneva, Tahoma, sans-serif;
+            line-height: 1.6;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            background-color: #f4f4f4;
+        }
+        .container {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            max-width: 600px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            
+        }
+        .buttons {
+            display: flex;
+            justify-content: space-between;
+        }
+        .button {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        .button.previous {
+            background-color: #ccc;
+            color: #666;
+        }
+        .button.previous.enabled {
+            background-color: #007BFF;
+            color: white;
+        }
+        .button.next {
+            background-color: #007BFF;
+            color: white;
+        }
+        .button.next.disabled {
+            background-color: #ccc;
+            color: #666;
+        }
+    </style>
+    <script src="jatos.js"></script>
+</head>
+<body>
+    <div class="container" id="page-1">
+        <div class="text-content instruct">
+            <p><strong>Hello and welcome to the experiment!</strong></p>
+            <p>You will be presented with a series of questionnaires and then two behavioral tasks. For example, we will have you estimate numbers of objects on the screen. You'll be given more detailed instructions prior to each task. The questionnaires should take 45 minutes or less in total, so please try to answer questions honestly and quickly (if in doubt, follow your gut and move on!). The tasks should take a total of 30 minutes.</p>
+            <p><b><strong>It is important that when you begin the tasks that you complete them start-to-finish in one sitting and not take any breaks.</strong></b></p>
+            <p><b>Before proceeding, if necessary please take this moment to stretch, use the restroom, or grab a glass of water.</b></p>
+            <p><b>IT IS IMPORTANT THAT YOU DO NOT EXIT THE BROWSER, LEAVE OR REFRESH THIS PAGE.</b></p>
+        </div>
+        <div class="buttons">
+            <button class="button previous" disabled>Previous</button>
+            <button class="button next" onclick="nextPage()">Next</button>
+        </div>
+    </div>
+
+    <div class="container" id="page-2" style="display: none;">
+        <div class="text-content">
+            <h2>Information</h2>
+            <div class="instruct">
+                Pseudonymized, anonymized, and Personally Identifiable electronic research data will be stored on the hosting site’s servers located within the EU in compliance with GDPR Title IX regulation.
+                <p><u><b>We use browser cookies.</b></u><br>The use of these session cookies, which are cleared when you close your browser tab/window, is necessary in order for the experiment to run properly. By taking part you agree to the use of cookies.</p>
+                <p><u><b>The Technical University of Munich Klinikum rechts der Isar is operating as the GDPR Data Controller for this study.</b></u><br>We will be using information from you in order to undertake this study and will act as the data controller for this. Your rights to access, change or move your information are limited, as we need to manage your information in specific ways in order for the research to be reliable and accurate. If you withdraw from the study, we will keep the information about you that we have already obtained. To safeguard your rights, we will use the minimum personally-identifiable information possible.</p>
+                <p><b>Researcher:</b> Zachary Tefertiller, zachary.tefertiller@tum.de (or contact via Prolific), <br>Graduate School of Systemic Neurosciences, Ludwig-Maximilians-Universität München | Technical University of Munich, Klinikum rechts der Isar, Knolle Lab</p>
+            </div>
+        </div>
+        <div class="buttons">
+            <button class="button previous enabled" onclick="previousPage()">Previous</button>
+            <button class="button next" onclick="nextPage()">Next</button>
+        </div>
+    </div>
+
+    <div class="container" id="page-3" style="display: none;">
+        <div class="scroll-box" id="scroll-box">
+            <p>The purpose of this study is to explore how behavioural performance on task compares to group differences based on questionnaire data and medical history. This includes collection of my personal data. Personal data here includes, but is not limited to, personally identifiable information such as nationality, birthdate, and medical history. To accomplish this, we are using the platforms Just Another Tool For Online Studies (JATOS) and the participant recruitment platform Prolific.
+                JATOS and other study assets are accessed via a GDPR compliant server hosted in Munich, Germany at the Leibniz-Rechenzentrum (LRZ) der Bayerischen Akademie der Wissenschaften. Data, including personal data, will be collected and stored on this system.
+            </p>
+            <p>I agree for my data to be collected via JATOS and Prolific platforms; I understand that these platforms require web browser cookies for the experiment to run properly and agree to the use of cookies. If I was recruited via Prolific, I agree to adhere to the Participant Terms in the contract agreed upon between myself and Prolific Academic Ltd.</p>
+            <p>I agree to the storage of my data on LRZ and TUM IT infrastructure, and for my anonymized data to be publicly accessible. </p>
+            <p>I agree that, unless my consent is withdrawn, I may be contacted via the Prolific platform for offers to participate in future studies. I understand I may withdraw my consent at any given time, without affecting the legitimacy of the processing of my data on the basis of prior approval on the basis of Article 6(1a) GDPR (General Data Protection Regulation). Upon receiving my notice of withdrawal of consent, the controller will directly delete all of my personal data.
+            <p>Please send any notice of withdrawal of consent to (beauftragter@datenschutz.tum.de). I understand that publicly available anonymized data cannot be withdrawn.
+                If applicable: Our processor in the context of the mailing is the Leibniz-Rechenzentrum (LRZ) der Bayerischen Akademie der Wissenschaften, Boltzmannstraße 1, D-85748 Garching near Munich.
+                By law, participants have a right to information, rectification, erasure, restriction of processing, or objection to processing or data portability. Furthermore, participants have a right of complaint and the right to appeal to the Bavarian commissioner for data protection.
+                Further questions should be addressed to us (Zachary.tefertiller@tum.de) or the data protection officer (www.datenschutz.tum.de).
+                By clicking “Next" on this page, I am agreeing to the aforementioned terms.</p>
+        </div>
+        <div class="buttons">
+            <button class="button previous enabled" onclick="previousPage()">Previous</button>
+            <button class="button next" id="next-button" onclick="nextPage()">Next</button>
+        </div>
+    </div>
+
+    <div class="container" id="page-4" style="display: none;">
+        <div class="text-content">
+            <h1>Informed Consent</h1>
+            <ul style="text-align: left">
+                <li>I have read and understood the study information provided to me on the previous pages.</li>
+                <li>I understand that my participation is voluntary and that I am free to withdraw at any time, without giving a reason, without my medical care or legal rights being affected.</li>
+                <li>I understand that my data may be made available anonymously to other researchers, both inside and outside the Technical University of Munich and its affiliated institutions.</li>
+                <li>By clicking 'Finish', I agree that I have read and confirm the above statements, and I agree to participate in this study.</li>
+            </ul>
+            <hr>
+            <p><span style="color: steelblue; font-size: 24px"><em>Click 'Next' to provide consent and continue.</em><br>If you no longer wish to participate, close your internet browser window.</span></p>
+        </div>
+        <div class="buttons">
+            <button class="button previous enabled" onclick="previousPage()">Previous</button>
+            <button class="button next" onclick="finishStudy()">Finish</button>
+        </div>
+    </div>
+
+    <script>
+        const startTime = performance.now();
+        let currentPage = 1;
+
+        function nextPage() {
+            document.getElementById('page-' + currentPage).style.display = 'none';
+            currentPage++;
+            if (document.getElementById('page-' + currentPage)) {
+                document.getElementById('page-' + currentPage).style.display = 'block';
+            }
+            if (currentPage === 4) {
+                document.getElementById('page-4').style.display = 'block';
+            }
+        }
+
+        function previousPage() {
+            document.getElementById('page-' + currentPage).style.display = 'none';
+            currentPage--;
+            if (document.getElementById('page-' + currentPage)) {
+                document.getElementById('page-' + currentPage).style.display = 'block';
+            }
+        }
+
+        document.getElementById('scroll-box').addEventListener('scroll', function() {
+            const scrollBox = document.getElementById('scroll-box');
+            if (scrollBox.scrollTop + scrollBox.clientHeight >= scrollBox.scrollHeight) {
+                document.getElementById('next-button').disabled = false;
+                document.getElementById('next-button').classList.remove('disabled');
+            }
+        });
+
+        function finishStudy() {
+            const endTime = performance.now();
+            const timeTaken = (endTime - startTime) / 1000;
+            consentGiven = true;
+            jatos.submitResultData({
+                timeTaken: timeTaken,
+                consentGiven: consentGiven
+            });
+            jatos.startNextComponent();
+        }
+
+        window.addEventListener('beforeunload', function (event) {
+            if (!consentGiven) {
+                const endTime = performance.now();
+                const timeTaken = (endTime - startTime) / 1000;
+                jatos.submitResultData({
+                    timeTaken: timeTaken,
+                    consentGiven: false
+                });
+            }
+        });
+
+    </script>
+</body>
+</html>
