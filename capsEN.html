@@ -4,6 +4,8 @@
     <meta charset="UTF-8">
     <title>Life Experiences Questionnaire</title>
     <style>
+        /* [Your existing CSS remains unchanged] */
+
         body {
             font-family: "OpenDyslexic", Arial, sans-serif;
             font-size: 16px;
@@ -14,14 +16,17 @@
             padding: 15px;
             background-color: #f0f8ff;
         }
+
         h1 {
             text-align: center;
             color: #2c3e50;
             font-size: 26px;
         }
+
         h2 {
             font-size: 22px;
         }
+
         .page {
             background-color: #fff;
             padding: 15px;
@@ -29,26 +34,31 @@
             margin-bottom: 20px;
             display: none;
         }
+
         .page.active {
             display: block;
         }
+
         .question {
             font-weight: bold;
             margin-bottom: 10px;
             font-size: 20px;
         }
+
         .yes-no {
             display: flex;
             justify-content: center;
             gap: 15px;
             margin-bottom: 15px;
         }
+
         #abortButton {
             position: fixed;
             top: 10px;
             right: 10px;
             z-index: 1000; 
         }
+
         .btn {
             padding: 10px 30px;
             border: none;
@@ -56,48 +66,59 @@
             cursor: pointer;
             font-size: 20px;
         }
+
         .btn-primary, .btn-secondary {
             background-color: #34495e;
             color: white;
         }
+
         .btn-primary:hover, .btn-secondary:hover {
             opacity: 0.9;
         }
+        
         .btn-yes-no {
             background-color: #34495e;
             color: white;
             font-size: 20px;
         }
+
         .btn-yes-no.selected {
             background-color: #3498db;
         }
+
         .btn:disabled {
             opacity: 0.5;
             cursor: not-allowed;
         }
+
         .scale-container {
             margin-bottom: 15px;
             padding: 8px;
             border-radius: 5px;
         }
+
         .scale.hidden {
             display: none;
         }
+
         .scale-question {
             font-weight: bold;
             font-size: 18px;
             text-align: center;
             margin-bottom: 8px;
         }
+
         .scale-labels {
             display: flex;
             justify-content: space-between;
             font-size: 16px;
         }
+
         .scale-options {
             display: flex;
             justify-content: space-between;
         }
+
         .scale-option {
             display: flex;
             flex-direction: column;
@@ -106,29 +127,34 @@
             padding: 4px;
             border-radius: 5px;
         }
+
         .scale-option.highlight {
             background-color: #ffcccc; /* Light red background */
             border: 2px solid red;
         }
+
         input[type="radio"] {
             margin-top: 8px;
             transform: scale(1.3);
         }
+
         .hidden {
             display: none;
         }
+
         .navigation {
             display: flex;
             justify-content: flex-end;
             margin-top: 15px;
         }
+
         .instruction {
             font-weight: bold;
             color: red;
             font-size: 18px;
             margin-bottom: 12px;
         }
-        /* Styles for collapsible instructions */
+
         #instructions-container {
             text-align: center;
             margin-bottom: 15px;
@@ -148,42 +174,64 @@
             color: #2980b9;
             text-decoration: underline;
         }
+        /* Large bold time estimate */
+        .time-estimate {
+            font-size: 20px;
+            font-weight: bold;
+            color: #2c3e50;
+            margin-bottom: 15px;
+            text-align: center;
+        }
+        #abortButton {
+            position: fixed;
+            top: 10px;
+            right: 10px;
+            z-index: 1000; 
+            padding: 10px 15px;
+            background-color: #dc3545;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        #abortButton:hover {
+            background-color: #c82333;
+        }
     </style>
 </head>
 <body>
     <button id="abortButton" onclick="abortStudy()">Abort Study</button>
-    <h1>Belief and Experience Questionnaire</h1>
-    <div id="instructions-container">
+    <h1>Life Experiences Questionnaire</h1>
+    <div id="instructions-container" class="hidden">
         <p id="subheader">
-            Please answer all questions honestly and rate the scales according to your own experiences. To see instructions again <span id="toggle-instructions">click here</span>.
+            Please answer according to your own experiences. To see instructions again <span id="toggle-instructions">click here</span>.
         </p>
         <div id="full-instructions" class="hidden">
-            <h2>Instructions</h2>
             <p>This questionnaire asks questions about sensations and perceptions you may have experienced.
                 Some of the experiences are unusual, some of them are more everyday.</p>
             <p>We are <b>NOT</b> interested in experiences under the influence of drugs/alcohol.</p>
-            <p>IT IS IMPORTANT THAT YOU ANSWER ALL QUESTIONS.</p>
             <p>For the questions you answer <b>YES</b> to, we are interested in:<br> 
                 (a) how <b>distressing</b> you found the experience<br>
                 (b) how <b>distracting</b> you found it; and <br>
                 (c) how <b>often</b> the experience occurs.<br><br>
                 Please select the number which corresponds most closely to how distressing this belief is, how often you think about it, and how much you believe that it is true.
-                If you answer <b>NO</b> please move on to the next question.</p>
+                If you answer <b>NO</b> please click the red buttons and move on to the next question.</p>
         </div>
     </div>
 
     <div id="page0" class="page active">
-        <h2>Instructions</h2>
+        <p class="time-estimate">This questionnaire should take at about 5 minutes.
+            (Note: This is slightly different than the belief questionnaire you completed. The scales differ slightly.)
+        </p>
         <p>This questionnaire asks questions about sensations and perceptions you may have experienced.
             Some of the experiences are unusual, some of them are more everyday.</p>
         <p>We are <b>NOT</b> interested in experiences under the influence of drugs/alcohol.</p>
-        <p>IT IS IMPORTANT THAT YOU ANSWER ALL QUESTIONS.</p>
         <p>For the questions you answer <b>YES</b> to, we are interested in:<br> 
             (a) how <b>distressing</b> you found the experience<br>
             (b) how <b>distracting</b> you found it; and <br>
             (c) how <b>often</b> the experience occurs.<br><br>
             Please select the number which corresponds most closely to how distressing this belief is, how often you think about it, and how much you believe that it is true.
-            If you answer <b>NO</b> please move on to the next question.</p>
+            If you answer <b>NO</b> please click the red buttons and move on to the next question.</p>
         <div class="navigation">
             <button id="start-btn" class="btn btn-primary">Start Questionnaire</button>
         </div>
@@ -192,128 +240,145 @@
     <div id="questionnaire-container"></div>
 
     <script src="jatos.js"></script>
-
+    <script src="prolificLinks.js"></script>
+    <script src="inactivity.js"></script>
     <script>
+
         let participantID = null;
-                jatos.onLoad(() => {
-                console.log("Session Data:", jatos.sessionData);
-                participantID = jatos.sessionData?.participantID || 'test';
-                if (participantID !== 'test') {
-                    console.log("Participant ID from session data:", participantID);
-                } else {
-                    console.warn("Session data or Participant ID is not set. Using fallback ID:", participantID);
-                }
-            });
-        const startTime = performance.now();
-        let attentionFails = 0; // Counter for attention check failures
-        let currentPage = 0;
+                    jatos.onLoad(() => {
+                        console.log("Session Data:", jatos.sessionData);
+                        participantID = jatos.studySessionData?.participantID || 'test';
+                        if (participantID !== 'test') {
+                            console.log("Participant ID from session data:", participantID);
+                        } else {
+                            console.warn("Session data or Participant ID is not set. Using fallback ID:", participantID);
+                        }
+                    });
 
-        // Define questions and attention checks as objects
+
+        const start_time = performance.now();
+        let attention_fails = 0; 
+        let current_page = 0;
+        let remaining_time = 0;
+        let page_timer_interval = null;
+
+        // Define main questions (caps_q1 to caps_q32)
         const questions = [
-            { id: 1, text: "Do you ever notice that sounds are much louder than they normally would be?", isAttentionCheck: false },
-            { id: 2, text: "Do you ever sense the presence of another being, despite being unable to see any evidence?", isAttentionCheck: false },
-            { id: 3, text: "Do you ever hear your own thoughts repeated or echoed?", isAttentionCheck: false },
-            { id: 4, text: "Do you ever see shapes, lights, or colours even though there is nothing really there?", isAttentionCheck: false },
-            { id: 5, text: "Do you ever experience unusual burning sensations or other strange feelings in or on your body?", isAttentionCheck: false },
-            { id: 6, text: "Do you ever hear noises or sounds when there is nothing about to explain them?", isAttentionCheck: false },
-            { id: 7, text: "Do you ever hear your own thoughts spoken aloud in your head, so that someone near might be able to hear them?", isAttentionCheck: false },
-            { id: 8, text: "Do you ever detect smells which don’t seem to come from your surroundings?", isAttentionCheck: false },
-            { id: 9, text: "Do you ever have the sensation that your body, or a part of it, is changing or has changed shape?", isAttentionCheck: false },
-            { id: 10, text: "Do you ever have the sensation that your limbs might not be your own or might not be properly connected to your body?", isAttentionCheck: false },
-            { id: 11, text: "Do you ever hear voices commenting on what you are thinking or doing?", isAttentionCheck: false },
-            { id: 12, text: "Do you ever feel that someone is touching you, but when you look nobody is there?", isAttentionCheck: false },
-            { id: 13, text: "Do you ever hear voices saying words or sentences when there is no-one around that might account for it?", isAttentionCheck: false },
-            { id: 14, text: "Do you ever experience unexplained tastes in your mouth?", isAttentionCheck: false },
-            { id: 15, text: "Do you ever find that sensations happen all at once and flood you with information?", isAttentionCheck: false },
-            { id: 16, text: "Do you ever find that sounds are distorted in strange or unusual ways?", isAttentionCheck: false },
-            { id: 17, text: "Do you ever have difficulty distinguishing one sensation from another?", isAttentionCheck: false },
-            { id: 18, text: "Do you ever smell everyday odors and think that they are unusually strong?", isAttentionCheck: false },
-            { id: 19, text: "Do you ever find the appearance of things or people seems to change in a puzzling way, e.g. distorted shapes or sizes or colour?", isAttentionCheck: false },
-            { id: 20, text: "Do you ever find that your skin is more sensitive to touch, heat, or cold than usual?", isAttentionCheck: false },
-            { id: 21, text: "Do you ever think that food or drink tastes much stronger than it normally would?", isAttentionCheck: false },
-            { id: 22, text: "Do you ever look in the mirror and think that your face seems different from usual?", isAttentionCheck: false },
-            { id: 23, text: "Do you ever have days where lights or colours seem brighter or more intense than usual?", isAttentionCheck: false },
-            { id: 24, text: "Do you ever have the feeling of being uplifted, as if driving or rolling over a road while sitting quietly?", isAttentionCheck: false },
-            { id: 25, text: "Do you ever find that common smells sometimes seem unusually different?", isAttentionCheck: false },
-            { id: 26, text: "Do you ever think that everyday things look abnormal to you?", isAttentionCheck: false },
-            { id: 27, text: "Do you ever find that your experience of time changes dramatically?", isAttentionCheck: false },
-            { id: 28, text: "Have you ever heard two or more unexplained voices talking with each other?", isAttentionCheck: false },
-            { id: 29, text: "Do you ever notice smells or odours that people next to you seem unaware of?", isAttentionCheck: false },
-            { id: 30, text: "Do you ever notice that food or drink seems to have an unusual taste?", isAttentionCheck: false },
-            { id: 31, text: "Do you ever see things that other people cannot?", isAttentionCheck: false },
-            { id: 32, text: "Do you ever hear sounds or music that people near you don’t hear?", isAttentionCheck: false },
+            { id: 1, text: "Do you ever notice that sounds are much louder than they normally would be?" },
+            { id: 2, text: "Do you ever sense the presence of another being, despite being unable to see any evidence?" },
+            { id: 3, text: "Do you ever hear your own thoughts repeated or echoed?" },
+            { id: 4, text: "Do you ever see shapes, lights, or colours even though there is nothing really there?" },
+            { id: 5, text: "Do you ever experience unusual burning sensations or other strange feelings in or on your body?" },
+            { id: 6, text: "Do you ever hear noises or sounds when there is nothing about to explain them?" },
+            { id: 7, text: "Do you ever hear your own thoughts spoken aloud in your head, so that someone near might be able to hear them?" },
+            { id: 8, text: "Do you ever detect smells which don’t seem to come from your surroundings?" },
+            { id: 9, text: "Do you ever have the sensation that your body, or a part of it, is changing or has changed shape?" },
+            { id: 10, text: "Do you ever have the sensation that your limbs might not be your own or might not be properly connected to your body?" },
+            { id: 11, text: "Do you ever hear voices commenting on what you are thinking or doing?" },
+            { id: 12, text: "Do you ever feel that someone is touching you, but when you look nobody is there?" },
+            { id: 13, text: "Do you ever hear voices saying words or sentences when there is no-one around that might account for it?" },
+            { id: 14, text: "Do you ever experience unexplained tastes in your mouth?" },
+            { id: 15, text: "Do you ever find that sensations happen all at once and flood you with information?" },
+            { id: 16, text: "Do you ever find that sounds are distorted in strange or unusual ways?" },
+            { id: 17, text: "Do you ever have difficulty distinguishing one sensation from another?" },
+            { id: 18, text: "Do you ever smell everyday odors and think that they are unusually strong?" },
+            { id: 19, text: "Do you ever find the appearance of things or people seems to change in a puzzling way, e.g. distorted shapes or sizes or colour?" },
+            { id: 20, text: "Do you ever find that your skin is more sensitive to touch, heat, or cold than usual?" },
+            { id: 21, text: "Do you ever think that food or drink tastes much stronger than it normally would?" },
+            { id: 22, text: "Do you ever look in the mirror and think that your face seems different from usual?" },
+            { id: 23, text: "Do you ever have days where lights or colours seem brighter or more intense than usual?" },
+            { id: 24, text: "Do you ever have the feeling of being uplifted, as if driving or rolling over a road while sitting quietly?" },
+            { id: 25, text: "Do you ever find that common smells sometimes seem unusually different?" },
+            { id: 26, text: "Do you ever think that everyday things look abnormal to you?" },
+            { id: 27, text: "Do you ever find that your experience of time changes dramatically?" },
+            { id: 28, text: "Have you ever heard two or more unexplained voices talking with each other?" },
+            { id: 29, text: "Do you ever notice smells or odours that people next to you seem unaware of?" },
+            { id: 30, text: "Do you ever notice that food or drink seems to have an unusual taste?" },
+            { id: 31, text: "Do you ever see things that other people cannot?" },
+            { id: 32, text: "Do you ever hear sounds or music that people near you don’t hear?" },
         ];
 
-
-        const attentionChecks = [
-            { id: "AC1", text: "This is an attention check. Please select 'Yes' and then select options 1, 3, and 5 for the scales.", isAttentionCheck: true, expectedAnswers: [1, 3, 5] },
-            { id: "AC2", text: "This is another attention check. Please select 'Yes' and then select option 1 for all scales.", isAttentionCheck: true, expectedAnswers: [1, 1, 1] },
+        // Define attention checks (caps_ac1, caps_ac2)
+        const attention_checks = [
+            { id: 1, text: "This is an attention check. Please select 'Yes' and then select options 1, 3, and 5 for the scales.", expected_answers: [1, 3, 5] },
+            { id: 2, text: "This is an attention check. Please select 'Yes' and then select option 1 for all scales.", expected_answers: [1, 1, 1] },
         ];
 
-        const scaleQuestions = [
+        const scale_questions = [
             "How distressing was this to you?",
             "How distracting was it?",
             "How often does the experience occur?"
         ];
 
-        const scaleBackgroundColors = ['#f9f9f9', '#f0f0f0', '#e8e8e8'];
+        const scale_background_colors = ['#f9f9f9', '#f0f0f0', '#e8e8e8'];
 
-        // Combine and shuffle the questions
-        const allQuestions = questions.concat(attentionChecks);
-        shuffle(allQuestions);
+        // Combine main questions and attention checks in the desired order
+        const combined = questions.concat(
+            attention_checks.map(ac => ({ ...ac, is_attention_check: true }))
+            );
 
-        function shuffle(array) {
+            function shuffle(array) {
             for (let i = array.length - 1; i > 0; i--) {
                 const j = Math.floor(Math.random() * (i + 1));
                 [array[i], array[j]] = [array[j], array[i]];
             }
-        }
+            return array;
+            }
 
-        function createQuestionPages() {
+            const all_questions = shuffle(combined);
+
+        // Function to create questionnaire pages
+        function create_question_pages() {
             const container = document.getElementById('questionnaire-container');
-            allQuestions.forEach((questionObj, index) => {
-                const isAttentionCheck = questionObj.isAttentionCheck;
-                const pageDiv = document.createElement('div');
-                pageDiv.classList.add('page');
-                pageDiv.id = `page${index + 1}`;
+            all_questions.forEach((question_obj, index) => {
+                const is_attention_check = question_obj.is_attention_check || false;
+                const page_div = document.createElement('div');
+                page_div.classList.add('page');
+                const page_number = index + 1;
+                page_div.id = `page${page_number}`;
 
-                pageDiv.innerHTML = `
-                    <div class="question">${questionObj.text}</div>
+                // Determine question identifier
+                const question_id = is_attention_check ? `caps_ac${question_obj.id}` : `caps_q${question_obj.id}`;
+
+                page_div.innerHTML = `
+                    <div class="question">${question_obj.text}</div>
                     <div class="yes-no">
-                        <button class="btn btn-yes-no" onclick="selectYesNo(${index + 1}, true, event, ${isAttentionCheck})">Yes</button>
-                        <button class="btn btn-yes-no" onclick="selectYesNo(${index + 1}, false, event, ${isAttentionCheck})">No</button>
+                        <button class="btn btn-yes-no" onclick="select_yes_no(${page_number}, true, event, ${is_attention_check})">Yes</button>
+                        <button class="btn btn-yes-no" onclick="select_yes_no(${page_number}, false, event, ${is_attention_check})">No</button>
                     </div>
-                    <div id="instruction${index + 1}" class="instruction hidden">
+                    <div id="instruction${page_number}" class="instruction hidden">
                         Please select the highlighted numbers to proceed.
                     </div>
-                    <div id="scales${index + 1}" class="scales hidden">
-                        ${createScales(index + 1)}
+                    <div id="scales${page_number}" class="scales hidden">
+                        ${create_scales(page_number)}
                     </div>
                     <div class="navigation">
-                        <button id="next-btn${index + 1}" onclick="${index < allQuestions.length - 1 ? 'nextPage()' : 'confirmSubmit()'}" class="btn btn-primary" disabled>${index < allQuestions.length - 1 ? 'Next' : 'Submit'}</button>
+                        <button id="next-btn${page_number}" onclick="${page_number < all_questions.length ? 'next_page()' : 'confirm_submit()'}" class="btn btn-primary" disabled>${page_number < all_questions.length ? 'Next' : 'Submit'}</button>
                     </div>
                 `;
-                container.appendChild(pageDiv);
+                container.appendChild(page_div);
             });
         }
 
-        function createScales(questionNumber) {
-            return scaleQuestions.map((scaleQuestion, idx) => `
-                <div class="scale-container hidden" data-scale-index="${idx}" style="background-color: ${scaleBackgroundColors[idx]};">
-                    <div class="scale-question">${scaleQuestion}</div>
+        // Function to create scale options
+        function create_scales(page_number) {
+            return scale_questions.map((scale_question, idx) => `
+                <div class="scale-container hidden" data-scale-index="${idx}" style="background-color: ${scale_background_colors[idx]};">
+                    <div class="scale-question">${scale_question}</div>
                     <div class="scale">
                         <div class="scale-labels">
-                            ${getScaleLabels(idx)}
+                            ${get_scale_labels(idx)}
                         </div>
                         <div class="scale-options">
-                            ${createScaleOptions(`q${questionNumber}_${getScaleSuffix(idx)}`)}
+                            ${create_scale_options(`q${page_number}_${get_scale_suffix(idx)}`)}
                         </div>
                     </div>
                 </div>
             `).join('');
         }
 
-        function getScaleLabels(index) {
+        // Function to get scale labels
+        function get_scale_labels(index) {
             const labels = [
                 `<span>Not at all distressing</span><span>Very distressing</span>`,
                 `<span>Not at all distracting</span><span>Very distracting</span>`,
@@ -322,12 +387,14 @@
             return labels[index] || `<span></span><span></span>`;
         }
 
-        function getScaleSuffix(index) {
+        // Function to get scale suffix
+        function get_scale_suffix(index) {
             const suffixes = ['distress', 'intrusiveness', 'frequency'];
             return suffixes[index] || '';
         }
 
-        function createScaleOptions(name) {
+        // Function to create scale options
+        function create_scale_options(name) {
             return Array(5).fill(0).map((_, i) => `
                 <div class="scale-option" data-value="${i + 1}">
                     <label for="${name}${i + 1}">${i + 1}</label>
@@ -336,322 +403,354 @@
             `).join('');
         }
 
-        function showPage(pageNumber) {
-            document.querySelectorAll('.page').forEach(page => page.classList.remove('active'));
-            const pageToShow = document.getElementById(`page${pageNumber}`);
-            if (pageToShow) {
-                pageToShow.classList.add('active');
+        // TIMER 
+        function update_next_button_state_for_timer(next_btn) {
+            const all_answered = are_all_questions_answered_on_page(current_page);
+            if (remaining_time > 0) {
+                next_btn.disabled = true;
+                next_btn.textContent = current_page < all_questions.length ? `Next (${remaining_time})` : `Submit (${remaining_time})`;
             } else {
-                console.error(`Page ${pageNumber} not found`);
+                next_btn.textContent = current_page < all_questions.length ? 'Next' : 'Submit';
+                next_btn.disabled = !all_answered;
             }
         }
 
-        function nextPage() {
-            currentPage++;
-            showPage(currentPage);
+        // Function to show a specific page
+        function show_page(page_number) {
+            // Clear any existing timer
+            if (page_timer_interval) {
+                clearInterval(page_timer_interval);
+                page_timer_interval = null;
+            }
+
+            document.querySelectorAll('.page').forEach(page => page.classList.remove('active'));
+            const page_to_show = document.getElementById(`page${page_number}`);
+            if (page_to_show) {
+                page_to_show.classList.add('active');
+                current_page = page_number;
+                const timer_duration = 8; // duration for timer of next button per question
+                remaining_time = timer_duration;
+
+                const next_btn = page_to_show.querySelector('.btn-primary');
+                update_next_button_state_for_timer(next_btn);
+
+                page_timer_interval = setInterval(() => {
+                    remaining_time--;
+                    update_next_button_state_for_timer(next_btn);
+
+                    if (remaining_time <= 0) {
+                        clearInterval(page_timer_interval);
+                        page_timer_interval = null;
+                        // Enable the Next button if all questions are answered
+                        update_next_button_state_for_timer(next_btn);
+                    }
+                }, 1000);
+            } else {
+                console.error(`Page ${page_number} not found`);
+            }
         }
 
-        function selectYesNo(questionNumber, isYes, event, isAttentionCheck) {
-            const page = document.getElementById(`page${questionNumber}`);
-            const scalesContainer = page.querySelector(`#scales${questionNumber}`);
-            const instruction = page.querySelector(`#instruction${questionNumber}`);
-            const nextBtn = page.querySelector(`#next-btn${questionNumber}`);
+        // Function to navigate to the next page
+        function next_page() {
+            current_page++;
+            show_page(current_page);
+        }
 
-            // Remove selected class from both buttons
+        // Function to handle Yes/No selection
+        function select_yes_no(page_number, is_yes, event, is_attention_check) {
+            const page = document.getElementById(`page${page_number}`);
+            const scales_container = page.querySelector(`#scales${page_number}`);
+            const instruction = page.querySelector(`#instruction${page_number}`);
+            let next_btn = page.querySelector(`#next-btn${page_number}`);
             page.querySelectorAll('.btn-yes-no').forEach(btn => btn.classList.remove('selected'));
-            // Add selected class to the clicked button
             event.target.classList.add('selected');
+            scales_container.classList.remove('hidden');
 
-            // Reset scales
-            scalesContainer.classList.remove('hidden');
-            nextBtn.disabled = true;
-
-            // Clear any previous selections and highlights
-            scalesContainer.querySelectorAll('input[type="radio"]').forEach(input => {
+            // Clear previous selections and highlights
+            scales_container.querySelectorAll('input[type="radio"]').forEach(input => {
                 input.checked = false;
             });
-            scalesContainer.querySelectorAll('.scale-option').forEach(option => {
+            scales_container.querySelectorAll('.scale-option').forEach(option => {
                 option.classList.remove('highlight');
             });
 
-            const scaleContainers = scalesContainer.querySelectorAll('.scale-container');
+            const new_scales = scales_container.cloneNode(true);
+            scales_container.parentNode.replaceChild(new_scales, scales_container);
 
-            // Remove existing event listeners to prevent stacking
-            const newScales = scalesContainer.cloneNode(true);
-            scalesContainer.parentNode.replaceChild(newScales, scalesContainer);
+            const updated_scales_container = page.querySelector(`#scales${page_number}`);
+            const updated_scale_containers = updated_scales_container.querySelectorAll('.scale-container');
+            next_btn = page.querySelector(`#next-btn${page_number}`);
 
-            // Re-select the updated scalesContainer
-            const updatedScalesContainer = page.querySelector(`#scales${questionNumber}`);
-            const updatedScaleContainers = updatedScalesContainer.querySelectorAll('.scale-container');
+            const question_obj = all_questions[page_number - 1];
 
-            if (isAttentionCheck) {
-                handleAttentionCheck(questionNumber, isYes, updatedScalesContainer, nextBtn, updatedScaleContainers);
+            if (is_yes) {
+                instruction.classList.add('hidden');
+                // Show all scales
+                updated_scale_containers.forEach(container => {
+                    container.classList.remove('hidden');
+                });
+                updated_scales_container.querySelectorAll('input[type="radio"]').forEach(input => {
+                    input.addEventListener('change', () => {
+                        // Update Next button state based on timer and answers
+                        update_next_button_state_for_timer(next_btn);
+                    });
+                });
             } else {
-                if (isYes) {
-                    instruction.classList.add('hidden');
-                    // Show all scales
-                    updatedScaleContainers.forEach(container => {
-                        container.classList.remove('hidden');
-                    });
-                    // Add event listeners to inputs
-                    updatedScalesContainer.querySelectorAll('input[type="radio"]').forEach(input => {
+                instruction.classList.remove('hidden');
+                // Hide all scales initially
+                updated_scale_containers.forEach(container => {
+                    container.classList.add('hidden');
+                });
+                // Highlight random options and show scales
+                updated_scale_containers.forEach((container) => {
+                    container.classList.remove('hidden');
+                    const random_value = Math.floor(Math.random() * 5) + 1;
+                    const option = container.querySelector(`.scale-option[data-value="${random_value}"]`);
+                    option.classList.add('highlight');
+                    const inputs = container.querySelectorAll('input[type="radio"]');
+                    inputs.forEach(input => {
                         input.addEventListener('change', () => {
-                            if (updatedScalesContainer.querySelectorAll('input[type="radio"]:checked').length === 3) {
-                                nextBtn.disabled = false;
-                            } else {
-                                nextBtn.disabled = true;
-                            }
+                            update_next_button_state_for_timer(next_btn);
                         });
                     });
-                } else {
-                    instruction.classList.remove('hidden');
-                    // Hide all scales initially
-                    updatedScaleContainers.forEach(container => {
-                        container.classList.add('hidden');
-                    });
-                    // Highlight random options and show scales
-                    updatedScaleContainers.forEach((container) => {
-                        container.classList.remove('hidden');
-                        const randomValue = Math.floor(Math.random() * 5) + 1;
-                        const option = container.querySelector(`.scale-option[data-value="${randomValue}"]`);
-                        option.classList.add('highlight');
+                });
+            }
 
-                        // Add event listeners to inputs
-                        const inputs = container.querySelectorAll('input[type="radio"]');
-                        inputs.forEach(input => {
-                            input.addEventListener('change', () => {
-                                if (areHighlightedOptionsSelected(updatedScaleContainers)) {
-                                    nextBtn.disabled = false;
-                                } else {
-                                    nextBtn.disabled = true;
-                                }
-                            });
-                        });
+            if (is_attention_check) {
+                next_btn = page.querySelector(`#next-btn${page_number}`);
+                next_btn.addEventListener('click', () => {
+                    const user_answers = [];
+                    updated_scale_containers.forEach((container) => {
+                        const selected_value = parseInt(container.querySelector('input[type="radio"]:checked')?.value);
+                        user_answers.push(selected_value);
                     });
+
+                    const is_correct = question_obj.expected_answers.every((val, idx) => val === user_answers[idx]);
+
+                    if (!is_correct) {
+                        attention_fails++;
+                        question_obj.attention_failed = true; 
+                    } else {
+                        question_obj.attention_failed = false; 
+                    }
+                }, { once: true });
+            }
+
+            update_next_button_state_for_timer(next_btn);
+        }
+
+        // Function to check if highlighted options are selected
+        function are_highlighted_options_selected(scale_containers) {
+            let all_selected = true;
+            scale_containers.forEach(container => {
+                const highlighted_option = container.querySelector('.scale-option.highlight input');
+                if (!highlighted_option || !highlighted_option.checked) {
+                    all_selected = false;
                 }
+            });
+            return all_selected;
+        }
+
+        // Function to check if all questions on the current page are answered
+        function are_all_questions_answered_on_page(page_number) {
+            const page = document.getElementById(`page${page_number}`);
+            if (!page) return false;
+
+            const yes_no_buttons = page.querySelectorAll('.btn-yes-no.selected');
+            if (yes_no_buttons.length === 0) {
+                return false;
+            }
+
+            const selected_yes = yes_no_buttons[0].textContent === 'Yes';
+
+            if (selected_yes) {
+                const scales_container = page.querySelector(`#scales${page_number}`);
+                const scale_questions_answered = scales_container ? scales_container.querySelectorAll('input[type="radio"]:checked').length : 0;
+                return scale_questions_answered === 3;
+            } else {
+                const scales_container = page.querySelector(`#scales${page_number}`);
+                const visible_scales = scales_container ? scales_container.querySelectorAll('.scale-container:not(.hidden)') : [];
+                if (visible_scales.length > 0) {
+                    return are_highlighted_options_selected(visible_scales);
+                }
+                return true; 
             }
         }
 
-        function areHighlightedOptionsSelected(scaleContainers) {
-            let allSelected = true;
-            scaleContainers.forEach(container => {
-                const highlightedOption = container.querySelector('.scale-option.highlight input');
-                if (!highlightedOption.checked) {
-                    allSelected = false;
-                }
-            });
-            return allSelected;
-        }
-
-        function handleAttentionCheck(questionNumber, isYes, scalesContainer, nextBtn, scaleContainers) {
-            const instruction = document.getElementById(`instruction${questionNumber}`);
+        // Function to handle attention check validations (if any additional logic is needed)
+        function handle_attention_check(page_number, is_yes, scales_container, next_btn, scale_containers) {
+            const instruction = document.getElementById(`instruction${page_number}`);
             instruction.classList.add('hidden');
 
-            const questionObj = allQuestions[questionNumber - 1];
-            const expectedAnswers = questionObj.expectedAnswers;
+            const question_obj = all_questions[page_number - 1];
+            const expected_answers = question_obj.expected_answers;
 
-            // Show all scales
-            scaleContainers.forEach(container => {
+            scale_containers.forEach(container => {
                 container.classList.remove('hidden');
             });
 
-            // Add event listeners to inputs
-            scalesContainer.querySelectorAll('input[type="radio"]').forEach(input => {
+            scales_container.querySelectorAll('input[type="radio"]').forEach(input => {
                 input.addEventListener('change', () => {
-                    if (scalesContainer.querySelectorAll('input[type="radio"]:checked').length === 3) {
-                        // Check if selected values match expected answers
-                        const userAnswers = [];
-                        scaleContainers.forEach((container) => {
-                            const selectedValue = parseInt(container.querySelector('input[type="radio"]:checked')?.value);
-                            userAnswers.push(selectedValue);
+                    if (scales_container.querySelectorAll('input[type="radio"]:checked').length === 3) {
+                        const user_answers = [];
+                        scale_containers.forEach((container) => {
+                            const selected_value = parseInt(container.querySelector('input[type="radio"]:checked')?.value);
+                            user_answers.push(selected_value);
                         });
 
-                        const isCorrect = expectedAnswers.every((val, idx) => val === userAnswers[idx]);
+                        const is_correct = expected_answers.every((val, idx) => val === user_answers[idx]);
 
-                        if (isCorrect) {
-                            nextBtn.disabled = false;
+                        if (is_correct) {
+                            update_next_button_state_for_timer(next_btn)
                         } else {
-                            nextBtn.disabled = false; // Allow proceeding but mark as failed later
+                            update_next_button_state_for_timer(next_btn) // Allow proceeding but mark as failed later
                         }
                     } else {
-                        nextBtn.disabled = true;
+                        next_btn.disabled = true;
                     }
                 });
             });
 
-            // Attach a one-time event listener to the next button to check the attention
-            nextBtn.addEventListener('click', () => {
-                const userAnswers = [];
-                scaleContainers.forEach((container) => {
-                    const selectedValue = parseInt(container.querySelector('input[type="radio"]:checked')?.value);
-                    userAnswers.push(selectedValue);
+            next_btn.addEventListener('click', () => {
+                const user_answers = [];
+                scale_containers.forEach((container) => {
+                    const selected_value = parseInt(container.querySelector('input[type="radio"]:checked')?.value);
+                    user_answers.push(selected_value);
                 });
 
-                const isCorrect = expectedAnswers.every((val, idx) => val === userAnswers[idx]);
+                const is_correct = expected_answers.every((val, idx) => val === user_answers[idx]);
 
-                if (!isCorrect) {
-                    attentionFails++;
-                    questionObj.attentionFailed = true; // Mark this attention check as failed
-                    if (attentionFails >= 2) {
+                if (!is_correct) {
+                    attention_fails++;
+                    question_obj.attention_failed = true; 
+                    if (attention_fails >= 5) {
                         alert("You have failed multiple attention checks. The study will now end.");
-                        const redirectUrl = 'https://app.prolific.com/submissions/complete?cc=C13EB4BR';
+                        const redirect_url = 'https://app.prolific.com/submissions/complete?cc=C13EB4BR';
                         window.onbeforeunload = null;
-                        jatos.endStudyAndRedirect(redirectUrl);
+                        jatos.endStudyAndRedirect(redirect_url);
                     } else {
                         alert("Warning: You failed an attention check. Please pay careful attention to the instructions.");
                     }
                 } else {
-                    questionObj.attentionFailed = false; // Mark as passed
+                    question_obj.attention_failed = false; 
                 }
-            }, { once: true }); // Ensure the listener is added only once
+            }, { once: true }); 
         }
 
-        function confirmSubmit() {
-            // Initialize data object with totals
+        // Function to confirm submission and collect data
+        function confirm_submit() {
             const data = {
-                capsTotal: 0,
-                capsDistress: 0,
-                capsIntrusiveness: 0,
-                capsFreq: 0,
-                attentionFails: attentionFails,
-                caps_time: null, // Will set this later
+                participant_id: participantID,
+                caps_total: 0,
+                caps_distress: 0,
+                caps_intrusiveness: 0,
+                caps_frequency: 0,
+                caps_attention_fails: attention_fails,
+                caps_time: null, 
             };
-            data['participantID'] = participantID;
-            // Loop over all questions
-            for (let i = 1; i <= allQuestions.length; i++) {
-                const questionObj = allQuestions[i - 1];
-                const isAttentionCheck = questionObj.isAttentionCheck;
 
-                // Label regular questions as 'capsX' and attention checks as their IDs
-                const questionId = isAttentionCheck ? questionObj.id : `caps${questionObj.id}`;
-                const questionData = {};
+            // Process main questions (caps_q1 to caps_q32)
+            questions.forEach((question, index) => {
+                const page_number = index + 1;
+                const question_id = `caps_q${question.id}`;
+                const page = document.getElementById(`page${page_number}`);
+                const question_data = {};
+                const yes_no_button = page.querySelector('.btn-yes-no.selected');
 
-                const yesNoButton = document.querySelector(`#page${i} .btn-yes-no.selected`);
-                if (yesNoButton) {
-                    const isYes = yesNoButton.textContent === 'Yes';
-                    questionData.answer = isYes ? 'Yes' : 'No';
+                if (yes_no_button) {
+                    const is_yes = yes_no_button.textContent === 'Yes';
+                    question_data.answer = is_yes ? 'Yes' : 'No';
 
-                    if (isAttentionCheck) {
-                        // Record whether the attention check was failed
-                        questionData.attentionFailed = questionObj.attentionFailed || false;
-                        // Optionally collect subscale ratings if desired
-                        if (isYes) {
-                            questionData.distress = parseInt(document.querySelector(`#page${i} input[name="q${i}_distress"]:checked`)?.value) || null;
-                            questionData.intrusiveness = parseInt(document.querySelector(`#page${i} input[name="q${i}_intrusiveness"]:checked`)?.value) || null;
-                            questionData.frequency = parseInt(document.querySelector(`#page${i} input[name="q${i}_frequency"]:checked`)?.value) || null;
-                        }
-                    } else {
-                        if (isYes) {
-                            // Collect subscale ratings for regular questions
-                            const distress = parseInt(document.querySelector(`#page${i} input[name="q${i}_distress"]:checked`)?.value) || 0;
-                            const intrusiveness = parseInt(document.querySelector(`#page${i} input[name="q${i}_intrusiveness"]:checked`)?.value) || 0;
-                            const frequency = parseInt(document.querySelector(`#page${i} input[name="q${i}_frequency"]:checked`)?.value) || 0;
-                            questionData.distress = distress;
-                            questionData.intrusiveness = intrusiveness;
-                            questionData.frequency = frequency;
+                    if (is_yes) {
+                        const distress = parseInt(page.querySelector(`input[name="q${page_number}_distress"]:checked`)?.value) || 0;
+                        const intrusiveness = parseInt(page.querySelector(`input[name="q${page_number}_intrusiveness"]:checked`)?.value) || 0;
+                        const frequency = parseInt(page.querySelector(`input[name="q${page_number}_frequency"]:checked`)?.value) || 0;
+                        question_data.distress = distress;
+                        question_data.intrusiveness = intrusiveness;
+                        question_data.frequency = frequency;
 
-                            // Update totals
-                            data.capsTotal += 1;
-                            data.capsDistress += distress;
-                            data.capsIntrusiveness += intrusiveness;
-                            data.capsFreq += frequency;
-                        }
+                        data.caps_total += 1;
+                        data.caps_distress += distress;
+                        data.caps_intrusiveness += intrusiveness;
+                        data.caps_frequency += frequency;
                     }
                 } else {
-                    questionData.answer = null;
-                    if (isAttentionCheck) {
-                        questionData.attentionFailed = null;
-                    }
+                    question_data.answer = null;
                 }
 
-                // Store question data in the main data object
-                data[questionId] = questionData;
-            }
+                data[question_id] = question_data;
+            });
 
-            // Set the time taken
-            const endTime = performance.now();
-            const timeTaken = (endTime - startTime) / 1000;
-            data.caps_time = timeTaken;
+            // Process attention checks (caps_ac1, caps_ac2, etc.)
+            attention_checks.forEach((ac, index) => {
+                const page_number = questions.length + index + 1;
+                const ac_id = `caps_ac${ac.id}`;
+                const page = document.getElementById(`page${page_number}`);
+                const ac_data = {};
+                const yes_no_button = page.querySelector('.btn-yes-no.selected');
 
-            // Submit data
+                if (yes_no_button) {
+                    const is_yes = yes_no_button.textContent === 'Yes';
+                    ac_data.answer = is_yes ? 'Yes' : 'No';
+
+                    ac_data.attention_failed = all_questions[page_number - 1].attention_failed || false;
+
+                    if (is_yes) {
+                        const distress = parseInt(page.querySelector(`input[name="q${page_number}_distress"]:checked`)?.value) || null;
+                        const intrusiveness = parseInt(page.querySelector(`input[name="q${page_number}_intrusiveness"]:checked`)?.value) || null;
+                        const frequency = parseInt(page.querySelector(`input[name="q${page_number}_frequency"]:checked`)?.value) || null;
+                        ac_data.distress = distress;
+                        ac_data.intrusiveness = intrusiveness;
+                        ac_data.frequency = frequency;
+                    }
+                } else {
+                    ac_data.answer = null;
+                    ac_data.attention_failed = null;
+                }
+
+                data[ac_id] = ac_data;
+            });
+
+            const end_time = performance.now();
+            const time_taken = (end_time - start_time) / 1000;
+            data.caps_time = time_taken;
+
+            // Data submission
             window.onbeforeunload = null;
-            const submitBtn = document.getElementById(`next-btn${allQuestions.length}`);
-            submitBtn.disabled = true;
-            const loadingMessage = document.createElement('p');
-            loadingMessage.textContent = 'Submitting data...';
-            document.querySelector(`#page${allQuestions.length}`).appendChild(loadingMessage);
+            const submit_btn = document.getElementById(`next-btn${all_questions.length}`);
+            submit_btn.disabled = true;
+            const loading_message = document.createElement('p');
+            loading_message.textContent = 'Submitting data...';
+            document.querySelector(`#page${all_questions.length}`).appendChild(loading_message);
 
             jatos.submitResultData(JSON.stringify(data))
                 .then(() => {
                     console.log('Data submitted successfully');
-                    loadingMessage.textContent = 'Data submitted. Starting next component...';
+                    loading_message.textContent = 'Data submitted. Starting next component...';
                     return jatos.startNextComponent();
                 })
                 .catch((error) => {
                     console.error("Error during submission or starting next component:", error);
-                    loadingMessage.textContent = 'Error occurred. Please try again or contact the researcher.';
-                    submitBtn.disabled = false;
+                    loading_message.textContent = 'Error occurred. Please try again or contact the researcher.';
+                    submit_btn.disabled = false;
                     alert("An error occurred. Please try again or contact the researcher if the problem persists.");
                 });
         }
 
-
-        function calculateTotals(data) {
-            let capsTotal = 0;
-            let capsDistress = 0;
-            let capsIntrusiveness = 0;
-            let capsFreq = 0;
-
-            data.forEach((question) => {
-                if (question.answer === 'Yes') {
-                    capsTotal++; // Counts only 'Yes' responses
-
-                    // Add scale values
-                    capsDistress += question.scales.distress || 0;
-                    capsIntrusiveness += question.scales.intrusiveness || 0;
-                    capsFreq += question.scales.frequency || 0;
-                }
-            });
-
-            return {
-                capsTotal,
-                capsDistress,
-                capsIntrusiveness,
-                capsFreq
-            };
-        }
-
-        function abortStudy() {
-            if (confirm("Are you sure you want to abort the study? You will be redirected to Prolific and marked as incomplete.")) {
-                const redirectUrl = 'https://app.prolific.com/submissions/complete?cc=CI24AD5Q';
-                jatos.endStudyAndRedirect(redirectUrl);
-            }
-        }
-
-        window.onbeforeunload = function(event) {
-            event.preventDefault();
-            event.returnValue = 'Are you sure you want to leave? Your progress will be lost and the study will be marked as incomplete.';
-            window.onunload = function() {
-                window.open('https://app.prolific.com/submissions/complete?cc=C13EB4BR', '_blank');
-            };
-            return event.returnValue;
-        };
-
-        // Initialize the questionnaire
-        createQuestionPages();
+        create_question_pages();
         document.getElementById('start-btn').addEventListener('click', () => {
-            currentPage = 1;
-            showPage(currentPage);
+            current_page = 1;
+            show_page(current_page);
+            document.getElementById('instructions-container').classList.remove('hidden');
         });
 
-        // Toggle instructions visibility
         document.getElementById('toggle-instructions').addEventListener('click', function() {
-            const fullInstructions = document.getElementById('full-instructions');
-            if (fullInstructions.classList.contains('hidden')) {
-                fullInstructions.classList.remove('hidden');
-                this.textContent = 'click here';
+            const full_instructions = document.getElementById('full-instructions');
+            if (full_instructions.classList.contains('hidden')) {
+                full_instructions.classList.remove('hidden');
+                this.textContent = 'hide instructions';
             } else {
-                fullInstructions.classList.add('hidden');
+                full_instructions.classList.add('hidden');
                 this.textContent = 'click here';
             }
         });

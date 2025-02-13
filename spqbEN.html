@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Belief and Experience Questionnaire</title>
+    <title>Perception Inventory</title>
     <link rel="stylesheet" href="questionnaireStyles.css">
     <style>
         /* Disabled button styling */
@@ -18,32 +18,29 @@
 <button id="abortButton" onclick="abortStudy()">Abort Study</button>
 <body>
     <div class="container">
-        <h1>Belief and Experience Questionnaire</h1>
-        
+        <h1>Perception Inventory</h1>
         <div id="questionnaire-container"></div>
-
-        <div id="confirmation-page" class="page">
-            <h2>Are you sure you want to submit?</h2>
-            <button id="confirm-submit-btn" class="btn">Submit</button>
-            <button id="go-back-btn" class="btn">No, go back</button>
-        </div>
     </div>
     <script src="jatos.js"></script>
+    <script src="prolificLinks.js"></script>
+    <script src="inactivity.js"></script>
     <script>
-
+        /// this is the SPQ B with two attention checks and subscale calculations  -z
         let participantID = null;
-        jatos.onLoad(() => {
-        console.log("Session Data:", jatos.sessionData);
-        participantID = jatos.sessionData?.participantID || 'test';
-        if (participantID !== 'test') {
-            console.log("Participant ID from session data:", participantID);
-        } else {
-            console.warn("Session data or Participant ID is not set. Using fallback ID:", participantID);
-        }
-    });
+                    jatos.onLoad(() => {
+                        console.log("Session Data:", jatos.sessionData);
+                        participantID = jatos.studySessionData?.participantID || 'test';
+                        if (participantID !== 'test') {
+                            console.log("Participant ID from session data:", participantID);
+                        } else {
+                            console.warn("Session data or Participant ID is not set. Using fallback ID:", participantID);
+                        }
+                    });
 
         const startTime = performance.now();
         let answers = {};
+
+
         const questions = [
         { id: 1, text: "Have you ever had the sense that some person or force is around you, even though you cannot see anyone?", factor: "Cognitive-Perceptual" },
         { id: 2, text: "Are you sometimes sure that other people can tell what you are thinking?", factor: "Cognitive-Perceptual" },
@@ -69,54 +66,114 @@
         { id: 22, text: "I find it hard to communicate clearly what I want to say to people.", factor: "Disorganized" }
         ];
 
+
         const options = [
             { value: "yes", label: "Yes" },
             { value: "no", label: "No" }
         ];
 
+
         const attentionChecks = [
             { id: "AC1", text: "This is an attention check, please select Yes to continue.", correct: "yes" },
-            { id: "AC2", text: "I was not born on the planet Earth. I was born on the planet Mars.", correct: "no" }
+            { id: "AC2", text: "This is an attention check, please select No to continue.", correct: "no" }
         ];
+
 
         const scoreMapping = {
             "yes": 1,
             "no": 0
         };
 
-        const questionsPerPage = 4;
+
+        const questionsPerPage = 1;
         let currentPage = 0;
-        const totalPages = Math.ceil(questions.length / questionsPerPage);
+        const totalPages = Math.ceil((questions.length + attentionChecks.length)/ questionsPerPage);
+
+
+        let remainingTime = 0;
+        let pageTimerInterval = null;
+
 
         function scrollToTop() {
             window.scrollTo({ top: 0, behavior: 'smooth' });
         }
 
+
         function showPage(pageIndex) {
+            // Clear any existing timer
+            if (pageTimerInterval) {
+                clearInterval(pageTimerInterval);
+                pageTimerInterval = null;
+            }
+
             document.querySelectorAll('.page').forEach(page => page.classList.remove('active'));
-            document.getElementById(`page${pageIndex + 1}`).classList.add('active');
+            const currentPageDiv = document.getElementById(`page${pageIndex + 1}`);
+            currentPageDiv.classList.add('active');
             currentPage = pageIndex;
             scrollToTop(); 
+
+            // Start the timer for this page
+            remainingTime = currentPageDiv.timerDuration;
+            const nextBtn = currentPageDiv.nextBtn;
+
+            // Update the Next button label
+            updateNextButtonStateForTimer(nextBtn);
+
+            pageTimerInterval = setInterval(() => {
+                remainingTime--;
+                updateNextButtonStateForTimer(nextBtn);
+
+                if (remainingTime <= 0) {
+                    clearInterval(pageTimerInterval);
+                    pageTimerInterval = null;
+                    // Enable the Next button if all questions are answered
+                    updateNextButtonStateForTimer(nextBtn);
+                }
+            }, 1000);
         }
 
-        function insertAttentionChecks() {
-            const questionsCopy = [...questions];
-            const totalQuestions = questionsCopy.length;
-            const shuffledAttentionChecks = attentionChecks.sort(() => Math.random() - 0.5); // Shuffle attention checks
 
+        function updateNextButtonStateForTimer(nextBtn) {
+            const startIndex = currentPage * questionsPerPage;
+            const endIndex = startIndex + questionsPerPage;
+
+            const allAnswered = areAllQuestionsAnswered(startIndex, endIndex);
+
+            if (remainingTime > 0) {
+                nextBtn.disabled = true;
+                nextBtn.textContent = currentPage < totalPages - 1 ? `Next (${remainingTime})` : `Submit (${remainingTime})`;
+            } else {
+                nextBtn.textContent = currentPage < totalPages - 1 ? "Next" : "Submit";
+            }
+            nextBtn.disabled = remainingTime > 0 || !allAnswered;
+        }
+
+
+        function insertAttentionChecks() {
+            const questionsCopy = [...questions]; // Clone the original questions
+            const shuffledAttentionChecks = [...attentionChecks].sort(() => Math.random() - 0.5); // Shuffle attention checks
+
+            // Define the range where attention checks can be inserted (after the 3rd question)
+            const insertableRangeStart = 3; // Zero-based index
+            const insertableRangeEnd = questionsCopy.length;
+
+            // Randomly insert each attention check
             shuffledAttentionChecks.forEach((check) => {
-                const randomIndex = Math.floor(Math.random() * totalQuestions);
-                questionsCopy.splice(randomIndex, 0, check); // Insert each attention check at a random position
+                const randomIndex = Math.floor(Math.random() * (insertableRangeEnd - insertableRangeStart)) + insertableRangeStart;
+                questionsCopy.splice(randomIndex, 0, check); // Insert attention check
             });
 
+            console.log("Final Questions with Attention Checks:", questionsCopy);
             return questionsCopy;
         }
 
         const randomizedQuestions = insertAttentionChecks();
 
 
-        function createQuestionPages() {
+    function createQuestionPages() {
             const container = document.getElementById('questionnaire-container');
+            const timerDuration = 5; // Timer duration in seconds
+
             for (let i = 0; i < totalPages; i++) {
                 const pageDiv = document.createElement('div');
                 pageDiv.classList.add('page');
@@ -143,7 +200,7 @@
                         button.classList.add('btn-option');
                         button.textContent = option.label;
                         button.onclick = () => {
-                            selectAnswer(question.id, option.value, button);
+                            selectAnswer(question.id, option.value, button); // Save the answer
                             updateNextButtonState(start, end, nextBtn); // Check if "Next" can be enabled
                         };
                         buttonGroup.appendChild(button);
@@ -157,31 +214,29 @@
 
                 // Placeholder for the Previous Button (to maintain alignment)
                 const prevPlaceholder = document.createElement('div');
-                prevPlaceholder.classList.add('btn-placeholder'); // Style this to take the same space as a button
+                prevPlaceholder.classList.add('btn-placeholder');
                 navDiv.appendChild(prevPlaceholder);
 
                 // Create Next Button
                 const nextBtn = document.createElement('button');
                 nextBtn.classList.add('btn');
-                nextBtn.textContent = i < totalPages - 1 ? "Next" : "Submit";
-                nextBtn.disabled = true; // Initially disabled
+                nextBtn.textContent = i < totalPages - 1 ? `Next (${timerDuration})` : `Submit (${timerDuration})`;
+                nextBtn.disabled = true; // Disable by default
                 nextBtn.onclick = () => {
                     if (i < totalPages - 1) {
                         showPage(i + 1);
                     } else {
-                        submitData();
+                        submitData(); // Directly submit data when "Submit" is clicked
                     }
                 };
-                navDiv.appendChild(nextBtn);
 
+                pageDiv.nextBtn = nextBtn; // Store the Next button in the pageDiv
+                pageDiv.timerDuration = timerDuration; // Store timer duration
+
+                navDiv.appendChild(nextBtn);
                 pageDiv.appendChild(navDiv);
                 container.appendChild(pageDiv);
             }
-        }
-
-        function updateNextButtonState(startIndex, endIndex, nextBtn) {
-            const allAnswered = areAllQuestionsAnswered(startIndex, endIndex);
-            nextBtn.disabled = !allAnswered; 
         }
 
         function areAllQuestionsAnswered(startIndex, endIndex) {
@@ -194,44 +249,31 @@
             return true;
         }
 
-
-
-
         function selectAnswer(questionId, value, selectedButton) {
             answers[questionId] = value; 
+            console.log("Selected Question ID:", questionId, "Value:", value);
 
-            const attentionCheck = attentionChecks.find(check => check.id === questionId);
-            if (attentionCheck) {
-                const isCorrect = value === attentionCheck.correct;
-                if (!isCorrect) {
-                    answers['attentionFails'] = (answers['attentionFails'] || 0) + 1; 
-                }
-            }
-
-            // Update UI for the selected button
             const buttonGroup = selectedButton.parentNode;
             buttonGroup.querySelectorAll('button').forEach(button => {
                 button.classList.remove('pressed');
             });
             selectedButton.classList.add('pressed');
 
-            // Mark question as answered
             const questionContainer = selectedButton.closest('.question-container');
             questionContainer.classList.add('answered');
+
+            // Update Next button state
+            const currentPageDiv = document.getElementById(`page${currentPage + 1}`);
+            const nextBtn = currentPageDiv.nextBtn;
+            updateNextButtonStateForTimer(nextBtn);
         }
 
-
-        function goToConfirmation() {
-            document.querySelectorAll('.page').forEach(page => page.classList.remove('active'));
-            document.getElementById('confirmation-page').classList.add('active');
-            scrollToTop(); // Added scroll to top when going to confirmation page
-        }
 
         function submitData() {
             const endTime = performance.now();
             const timeTaken = (endTime - startTime) / 1000;
             const data = {};
-            data['participantID'] = participantID;
+            data['participant_id'] = participantID;
             let totalScore = 0;
             const factorScores = {};
             let unansweredQuestions = [];
@@ -252,9 +294,9 @@
                     } else {
                         unansweredQuestions.push(question.id);
                     }
-                    spqData.push({ [`spq${question.id}`]: score }); // Store SPQ data
+                    spqData.push({ [`spq_q${question.id}`]: score }); // Store SPQ data
                 } else {
-                    attentionCheckData.push({ [`attentionCheck${question.id}`]: selectedOption }); // Store attention checks
+                    attentionCheckData.push({ [`attention_check_ac${question.id}`]: selectedOption }); // Store attention checks
                 }
             });
 
@@ -265,15 +307,23 @@
                 return;
             }
 
+            // Recalculate attentionFails based on final answers
+            let attentionFails = 0;
+            attentionChecks.forEach((check) => {
+                const selectedOption = answers[check.id];
+                if (selectedOption !== check.correct) {
+                    attentionFails++;
+                }
+            });
+
             data['spq_total_score'] = totalScore;
             data['spq_factor_scores'] = factorScores;
-            data['attentionFails'] = answers['attentionFails'] || 0; 
+            data['spq_attention_fails'] = attentionFails; // Use recalculated attentionFails
 
-            // Merge SPQ and attention check data into the final JSON
             const finalData = {
                 ...data,
-                spqData: spqData,
-                attentionCheckData: attentionCheckData,
+                spq_data: spqData,
+                spq_attention: attentionCheckData,
                 spqb_time: timeTaken
             };
 
@@ -286,22 +336,9 @@
             });
         }
 
-
-
-        document.getElementById('confirm-submit-btn').addEventListener('click', submitData);
-        document.getElementById('go-back-btn').addEventListener('click', () => {
-            showPage(currentPage);
-            scrollToTop(); 
-        });
-
         createQuestionPages();
+        showPage(0);
 
-        function abortStudy() {
-            if (confirm("Are you sure you want to abort the study? You will be redirected to Prolific and marked as incomplete.")) {
-                const redirectUrl = 'https://app.prolific.com/submissions/complete?cc=CXOPFIDH';
-                jatos.endStudyAndRedirect(redirectUrl);
-            }
-        }
     </script>
 </body>
 </html>

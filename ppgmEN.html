@@ -4,27 +4,81 @@
     <meta charset="UTF-8">
     <title>Gambling Involvement Questionnaire</title>
     <link rel="stylesheet" href="questionnaireStyles.css">
+    <style>
+        /* Additional styles for improved appearance */
+        .checkbox-group {
+            display: flex;
+            flex-direction: column;
+            margin-top: 20px;
+        }
+
+        .checkbox-label {
+            font-size: 1.2em;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+        }
+
+        .checkbox-label input {
+            margin-right: 10px;
+            transform: scale(1.5);
+        }
+
+        .btn-next {
+            font-size: 1.2em;
+            padding: 10px 20px;
+        }
+
+        .btn-next.disabled {
+            background-color: #ccc;
+            cursor: not-allowed;
+        }
+
+        /* Styles for the countdown timer */
+        .btn-next.disabled::after {
+            content: attr(data-countdown);
+            margin-left: 5px;
+        }
+    </style>
 </head>
 <body>
     <button id="abortButton" onclick="abortStudy()">Abort Study</button>
     <div class="container">
-        <h1>Gambling Involvement Questionnaire</h1>
+        <h1>Gambling Questionnaire</h1>
         <div id="questionnaire-container"></div>
     </div>
     <script src="jatos.js"></script>
+    <script src="prolificLinks.js"></script>
+    <script src="inactivity.js"></script>
     <script>
         let participantID = null;
-                jatos.onLoad(() => {
-                console.log("Session Data:", jatos.sessionData);
-                participantID = jatos.sessionData?.participantID || 'test';
-                if (participantID !== 'test') {
-                    console.log("Participant ID from session data:", participantID);
-                } else {
-                    console.warn("Session data or Participant ID is not set. Using fallback ID:", participantID);
-                }
-            });
+                    jatos.onLoad(() => {
+                        console.log("Session Data:", jatos.sessionData);
+                        participantID = jatos.studySessionData?.participantID || 'test';
+                        if (participantID !== 'test') {
+                            console.log("Participant ID from session data:", participantID);
+                        } else {
+                            console.warn("Session data or Participant ID is not set. Using fallback ID:", participantID);
+                        }
+                    });
+
         const startTime = performance.now();
         let answers = {};
+        let skippedGamblingQuestions = false; // Flag to check if we need to skip questions
+
+        const initialQuestion = {
+            id: "initial",
+            text: "Have you gambled in the past 12 months in any form? i.e. in a Casino, Sports Betting, Gaming 'Loot Boxes', Slot Machines, Online Gambling",
+            options: [
+                { value: "casino", label: "Casino" },
+                { value: "sports_betting", label: "Sports Betting" },
+                { value: "loot_boxes", label: "Gaming 'Loot Boxes'" },
+                { value: "slot_machines", label: "Slot Machines" },
+                { value: "online_gambling", label: "Online Gambling" },
+                { value: "none", label: "I have not gambled in the past 12 months" }
+            ]
+        };
+
         const questions = [
             { id: "1a", text: "Has your involvement in gambling caused you either to borrow a significant amount of money or sell some of your possessions in the past 12 months?" },
             { id: "1b", text: "Has your involvement in gambling caused significant financial concerns for you or someone close to you in the past 12 months?" },
@@ -61,24 +115,106 @@
             "no": 1
         };
     
-        const questionsPerPage = 1;
-        let currentPage = 0;
-        const totalPages = questions.length;
-    
         function scrollToTop() {
             window.scrollTo({ top: 0, behavior: 'smooth' });
         }
     
         function showPage(pageIndex) {
             document.querySelectorAll('.page').forEach(page => page.classList.remove('active'));
-            document.getElementById(`page${pageIndex + 1}`).classList.add('active');
+            const page = document.getElementById(`page${pageIndex}`);
+            page.classList.add('active');
             currentPage = pageIndex;
             scrollToTop();
+            startCountdown(page);
+        }
+    
+        function createInitialPage() {
+            const container = document.getElementById('questionnaire-container');
+            const pageDiv = document.createElement('div');
+            pageDiv.classList.add('page', 'active');
+            pageDiv.id = 'page0';
+    
+            const questionContainer = document.createElement('div');
+            questionContainer.classList.add('question-container');
+    
+            const questionDiv = document.createElement('div');
+            questionDiv.classList.add('question');
+            questionDiv.innerHTML = `${initialQuestion.text}`;
+            questionContainer.appendChild(questionDiv);
+    
+            const optionsContainer = document.createElement('div');
+            optionsContainer.classList.add('checkbox-group');
+            initialQuestion.options.forEach(option => {
+                const label = document.createElement('label');
+                label.classList.add('checkbox-label');
+                const input = document.createElement('input');
+                input.type = 'checkbox';
+                input.name = 'gamblingTypes';
+                input.value = option.value;
+                // Use setTimeout to ensure state is updated
+                input.onclick = () => {
+                    setTimeout(() => {
+                        handleInitialSelection();
+                        checkIfCanEnableNext(pageDiv);
+                    }, 0);
+                };
+                label.appendChild(input);
+                label.appendChild(document.createTextNode(option.label));
+                optionsContainer.appendChild(label);
+            });
+            questionContainer.appendChild(optionsContainer);
+            pageDiv.appendChild(questionContainer);
+    
+            const navDiv = document.createElement('div');
+            navDiv.classList.add('navigation');
+            const nextBtn = document.createElement('button');
+            nextBtn.classList.add('btn', 'btn-next', 'disabled');
+            nextBtn.textContent = "Next";
+            nextBtn.onclick = handleInitialNext;
+            navDiv.appendChild(nextBtn);
+            pageDiv.appendChild(navDiv);
+            container.appendChild(pageDiv);
+    
+            startCountdown(pageDiv);
+        }
+    
+        function handleInitialSelection() {
+            // Ensure that if "I have not gambled..." is checked, other options are unchecked
+            const checkboxes = document.querySelectorAll('input[name="gamblingTypes"]');
+            const noneCheckbox = Array.from(checkboxes).find(cb => cb.value === 'none');
+            if (noneCheckbox.checked) {
+                checkboxes.forEach(cb => {
+                    if (cb !== noneCheckbox) cb.checked = false;
+                });
+            } else {
+                const otherChecked = Array.from(checkboxes).some(cb => cb !== noneCheckbox && cb.checked);
+                if (otherChecked) {
+                    noneCheckbox.checked = false;
+                }
+            }
+        }
+    
+        function handleInitialNext() {
+            const selectedOptions = Array.from(document.querySelectorAll('input[name="gamblingTypes"]:checked')).map(cb => cb.value);
+            if (selectedOptions.length === 0) {
+                alert("Please select at least one option before proceeding.");
+                return;
+            }
+            answers["gambling_types"] = selectedOptions;
+            if (selectedOptions.includes('none')) {
+                // Skip to submission
+                skippedGamblingQuestions = true;
+                submitData();
+            } else {
+                // Proceed to questionnaire
+                document.getElementById('page0').classList.remove('active');
+                createQuestionPages();
+            }
         }
     
         function createQuestionPages() {
             const container = document.getElementById('questionnaire-container');
-            for (let i = 0; i < totalPages; i++) {
+            for (let i = 0; i < questions.length; i++) {
                 const pageDiv = document.createElement('div');
                 pageDiv.classList.add('page');
                 if (i === 0) pageDiv.classList.add('active');
@@ -100,7 +236,10 @@
                     const button = document.createElement('button');
                     button.classList.add('btn-option');
                     button.textContent = option.label;
-                    button.onclick = () => selectAnswer(question.id, option.value, button);
+                    button.onclick = () => {
+                        selectAnswer(question.id, option.value, button);
+                        checkIfCanEnableNext(pageDiv);
+                    };
                     buttonGroup.appendChild(button);
                 });
                 questionContainer.appendChild(buttonGroup);
@@ -128,7 +267,10 @@
                         const button = document.createElement('button');
                         button.classList.add('btn-option');
                         button.textContent = option.label;
-                        button.onclick = () => selectAnswer(question10b.id, option.value, button);
+                        button.onclick = () => {
+                            selectAnswer(question10b.id, option.value, button);
+                            checkIfCanEnableNext(pageDiv);
+                        };
                         buttonGroup10b.appendChild(button);
                     });
                     question10bContainer.appendChild(buttonGroup10b);
@@ -148,6 +290,7 @@
                                 // Clear answer for 10b if it was previously set
                                 delete answers["10b"];
                             }
+                            checkIfCanEnableNext(pageDiv);
                         };
                     });
                 }
@@ -155,19 +298,10 @@
                 const navDiv = document.createElement('div');
                 navDiv.classList.add('navigation');
     
-                // Previous Button
-                if (i > 0) {
-                    const prevBtn = document.createElement('button');
-                    prevBtn.classList.add('btn', 'btn-prev');
-                    prevBtn.textContent = "Previous";
-                    prevBtn.onclick = () => showPage(i - 1);
-                    navDiv.appendChild(prevBtn);
-                }
-    
-                // Next or Submit Button
-                if (i < totalPages - 1) {
+                // Only the Next or Submit Button
+                if (i < questions.length - 1) {
                     const nextBtn = document.createElement('button');
-                    nextBtn.classList.add('btn', 'btn-next');
+                    nextBtn.classList.add('btn', 'btn-next', 'disabled');
                     nextBtn.textContent = "Next";
                     nextBtn.onclick = () => {
                         // Check if the current question is answered before moving to the next
@@ -176,7 +310,7 @@
                             if (question.id === "10a" && answers["10a"] === "yes" && answers["10b"] === undefined) {
                                 alert("Please answer the follow-up question before proceeding.");
                             } else {
-                                showPage(i + 1);
+                                showPage(i + 2); // +2 because pages start from 0 (initial) and we've incremented i from 0
                             }
                         } else {
                             alert("Please answer the question before proceeding.");
@@ -185,7 +319,7 @@
                     navDiv.appendChild(nextBtn);
                 } else {
                     const submitBtn = document.createElement('button');
-                    submitBtn.classList.add('btn', 'btn-next');
+                    submitBtn.classList.add('btn', 'btn-next', 'disabled');
                     submitBtn.textContent = "Submit";
                     submitBtn.onclick = () => {
                         // Ensure the last question is answered before submission
@@ -215,6 +349,8 @@
     
                 pageDiv.appendChild(navDiv);
                 container.appendChild(pageDiv);
+    
+                startCountdown(pageDiv);
             }
         }
     
@@ -227,13 +363,26 @@
             selectedButton.classList.add('pressed');
             const questionContainer = selectedButton.closest('.question-container');
             questionContainer.classList.add('answered');
+            checkIfCanEnableNext(selectedButton.closest('.page'));
+        }
+    
+        function checkIfCanEnableNext(pageDiv) {
+            const nextButton = pageDiv.querySelector('.btn-next');
+            const timeUp = nextButton.dataset.timeUp === "true";
+            const questionAnswered = pageDiv.querySelector('.question-container.answered') !== null || pageDiv.querySelector('input[name="gamblingTypes"]:checked') !== null;
+            if (timeUp && questionAnswered) {
+                nextButton.disabled = false;
+                nextButton.classList.remove('disabled');
+                nextButton.textContent = nextButton.textContent.replace(/\(\d+\)/, '').trim();
+            }
         }
     
         function submitData() {
             const endTime = performance.now();
             const timeTaken = (endTime - startTime) / 1000;
             const data = {};
-            data['participantID'] = participantID;
+            data['participant_id'] = participantID;
+            data['gambling_types'] = answers['gambling_types'].includes('none') ? 'No Gambling' : answers['gambling_types'];
             let totalScore = 0;
             let unansweredQuestions = [];
     
@@ -255,63 +404,75 @@
             let impairedControlTotal = 0;
             let otherIssuesTotal = 0;
     
-            allQuestionIds.forEach((questionId) => {
-                const selectedOption = answers[questionId];
-                let score = null;
+            if (skippedGamblingQuestions) {
+                // If the participant did not gamble, set all scores to zero
+                allQuestionIds.forEach(questionId => {
+                    data[`ppgm${questionId}`] = 0;
+                });
+                data['ppgm_total'] = 0;
+                data['ppgm_problems'] = 0;
+                data['ppgm_impaired_control'] = 0;
+                data['ppgm_other_issues'] = 0;
+                data['ppgm_time'] = timeTaken;
+            } else {
+                allQuestionIds.forEach((questionId) => {
+                    const selectedOption = answers[questionId];
+                    let score = null;
     
-                if (selectedOption !== undefined) {
-                    if (questionId === "10b") {
-                        // Inverse scoring for 10b
-                        score = inversedScoreMapping[selectedOption];
-                    } else {
-                        score = scoreMapping[selectedOption];
-                    }
-    
-                    // Record the score in the responses
-                    data[`ppgm${questionId}`] = score;
-    
-                    // For "b" questions (1b, 3b, 5b), check if the corresponding "a" question was answered "Yes"
-                    const isBQuestion = ["1b", "3b", "5b"].includes(questionId);
-                    let includeInTotals = true;
-                    if (isBQuestion) {
-                        const aQuestionId = bQuestions[questionId];
-                        const aAnswer = answers[aQuestionId];
-                        if (aAnswer === "yes") {
-                            // Do not include the score for this "b" question in totals
-                            includeInTotals = false;
+                    if (selectedOption !== undefined) {
+                        if (questionId === "10b") {
+                            // Inverse scoring for 10b
+                            score = inversedScoreMapping[selectedOption];
+                        } else {
+                            score = scoreMapping[selectedOption];
                         }
-                    }
     
-                    if (includeInTotals) {
-                        totalScore += score;
+                        // Record the score in the responses
+                        data[`ppgm_q${questionId}`] = score;
     
-                        // Calculate subscale totals
-                        if (["1a", "1b", "2", "3a", "3b", "4", "5a", "5b", "6", "7"].includes(questionId)) {
-                            problemsTotal += score;
-                        } else if (["8", "9", "10a", "10b", "11"].includes(questionId)) {
-                            impairedControlTotal += score;
-                        } else if (["12", "13", "14"].includes(questionId)) {
-                            otherIssuesTotal += score;
+                        // For "b" questions (1b, 3b, 5b), check if the corresponding "a" question was answered "Yes"
+                        const isBQuestion = ["1b", "3b", "5b"].includes(questionId);
+                        let includeInTotals = true;
+                        if (isBQuestion) {
+                            const aQuestionId = bQuestions[questionId];
+                            const aAnswer = answers[aQuestionId];
+                            if (aAnswer === "yes") {
+                                // Do not include the score for this "b" question in totals
+                                includeInTotals = false;
+                            }
                         }
+    
+                        if (includeInTotals) {
+                            totalScore += score;
+    
+                            // Calculate subscale totals
+                            if (["1a", "1b", "2", "3a", "3b", "4", "5a", "5b", "6", "7"].includes(questionId)) {
+                                problemsTotal += score;
+                            } else if (["8", "9", "10a", "10b", "11"].includes(questionId)) {
+                                impairedControlTotal += score;
+                            } else if (["12", "13", "14"].includes(questionId)) {
+                                otherIssuesTotal += score;
+                            }
+                        }
+                    } else if (selectedOption === undefined && !(questionId === "10b" && answers["10a"] !== "yes")) {
+                        // Exclude 10b from unanswered if it was not displayed
+                        unansweredQuestions.push(questionId);
                     }
-                } else if (selectedOption === undefined && !(questionId === "10b" && answers["10a"] !== "yes")) {
-                    // Exclude 10b from unanswered if it was not displayed
-                    unansweredQuestions.push(questionId);
+                });
+                data['ppgm_total'] = totalScore;
+                data['ppgm_problems'] = problemsTotal;
+                data['ppgm_impaired_control'] = impairedControlTotal;
+                data['ppgm_other_issues'] = otherIssuesTotal;
+                data['ppgm_time'] = timeTaken;
+    
+                if (unansweredQuestions.length > 0) {
+                    alert(`Please answer all questions before submitting. Unanswered questions: ${unansweredQuestions.join(', ')}`);
+                    // Find the page of the first unanswered question
+                    const firstUnansweredId = unansweredQuestions[0];
+                    const firstUnansweredIndex = questions.findIndex(q => q.id === firstUnansweredId);
+                    showPage(firstUnansweredIndex + 1); // +1 because pages start from 1 after initial page
+                    return;
                 }
-            });
-            data['ppgm_total'] = totalScore;
-            data['ppgm_problems'] = problemsTotal;
-            data['ppgm_impaired_control'] = impairedControlTotal;
-            data['ppgm_other_issues'] = otherIssuesTotal;
-            data['ppgm_time'] = timeTaken;
-    
-            if (unansweredQuestions.length > 0) {
-                alert(`Please answer all questions before submitting. Unanswered questions: ${unansweredQuestions.join(', ')}`);
-                // Find the page of the first unanswered question
-                const firstUnansweredId = unansweredQuestions[0];
-                const firstUnansweredIndex = questions.findIndex(q => q.id === firstUnansweredId);
-                showPage(firstUnansweredIndex);
-                return;
             }
     
             console.log("Submitting data:", JSON.stringify(data));
@@ -323,14 +484,28 @@
             });
         }
     
-        createQuestionPages();
-    
-        function abortStudy() {
-            if (confirm("Are you sure you want to abort the study? You will be redirected to Prolific and marked as incomplete.")) {
-                const redirectUrl = 'https://app.prolific.com/submissions/complete?cc=CXOPFIDH';
-                jatos.endStudyAndRedirect(redirectUrl);
+        function startCountdown(pageDiv) {
+            const nextButton = pageDiv.querySelector('.btn-next');
+            if (nextButton) {
+                let countdown = 5;
+                nextButton.disabled = true;
+                nextButton.classList.add('disabled');
+                nextButton.dataset.timeUp = "false";
+                nextButton.textContent = `Next (${countdown})`;
+                const interval = setInterval(() => {
+                    countdown--;
+                    if (countdown > 0) {
+                        nextButton.textContent = `Next (${countdown})`;
+                    } else {
+                        clearInterval(interval);
+                        nextButton.dataset.timeUp = "true";
+                        checkIfCanEnableNext(pageDiv);
+                    }
+                }, 1000);
             }
         }
+    
+        createInitialPage();
     </script>
 </body>
 </html>
