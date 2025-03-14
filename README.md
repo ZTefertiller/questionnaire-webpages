@@ -1,6 +1,9 @@
 Here are a few files for the questionnaires and other forms ie demographics / consent for online tasks in the lab. 
 
-Make sure that we update the prolificLinks.js file for your particular study and completion branches on Prolific. 
-
-Similarly, the consent form was used for the balloon task, so it will need to be amended for your task as well if you
-use it. 
+For prolific integration:
+  1) make sure that prolificLinks.js is configured with specific links for your particular study from Prolific
+  2) the first component of your study on JATOS needs to be the prolificLanding.html 
+  3) the second component of your study should be the participant code generator
+  4) make sure you record the participant code with the data for any components you have - see questionnaires for how to call it from JATOS
+  5) you MUST include an abort study button in your own task pages - you can borrow the CSS in a questionnaire and functionality from     prolificLinks.js
+  6) the consent form here needs to be updated for your specific study if you would like to use it as a template
