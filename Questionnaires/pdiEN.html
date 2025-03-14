@@ -1,0 +1,649 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Belief Questionnaire</title>
+    <style>
+        body {
+            font-family: "OpenDyslexic", Arial, sans-serif;
+            font-size: 16px;
+            line-height: 1.6;
+            color: #333;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 15px;
+            background-color: #f0f8ff;
+        }
+        h1 {
+            text-align: center;
+            color: #2c3e50;
+            font-size: 26px;
+        }
+        h2 {
+            font-size: 22px;
+        }
+        .page {
+            background-color: #fff;
+            padding: 15px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            display: none;
+        }
+        .page.active {
+            display: block;
+        }
+        .question {
+            font-weight: bold;
+            margin-bottom: 10px;
+            font-size: 20px;
+        }
+        .yes-no {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin-bottom: 15px;
+        }
+        #abortButton {
+            position: fixed;
+            top: 10px;
+            right: 10px;
+            z-index: 1000; 
+        }
+        .btn {
+            padding: 10px 30px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 20px;
+        }
+        .btn-primary, .btn-secondary {
+            background-color: #34495e;
+            color: white;
+        }
+        .btn-primary:hover, .btn-secondary:hover {
+            opacity: 0.9;
+        }
+        .btn-yes-no {
+            background-color: #34495e;
+            color: white;
+            font-size: 20px;
+        }
+        .btn-yes-no.selected {
+            background-color: #3498db;
+        }
+        .btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+        .scale-container {
+            margin-bottom: 15px;
+            padding: 8px;
+            border-radius: 5px;
+        }
+        .scale.hidden {
+            display: none;
+        }
+        .scale-question {
+            font-weight: bold;
+            font-size: 18px;
+            text-align: center;
+            margin-bottom: 8px;
+        }
+        .scale-labels {
+            display: flex;
+            justify-content: space-between;
+            font-size: 16px;
+        }
+        .scale-options {
+            display: flex;
+            justify-content: space-between;
+        }
+        .scale-option {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            font-size: 16px;
+            padding: 4px;
+            border-radius: 5px;
+        }
+        .scale-option.highlight {
+            background-color: #ffcccc; /* Light red background */
+            border: 2px solid red;
+        }
+        input[type="radio"] {
+            margin-top: 8px;
+            transform: scale(1.3);
+        }
+        .hidden {
+            display: none;
+        }
+        .navigation {
+            display: flex;
+            justify-content: flex-end;
+            margin-top: 15px;
+        }
+        .instruction {
+            font-weight: bold;
+            color: red;
+            font-size: 18px;
+            margin-bottom: 12px;
+        }
+        /* Styles for collapsible instructions */
+        #instructions-container {
+            text-align: center;
+            margin-bottom: 15px;
+        }
+        #subheader {
+            font-size: 18px;
+        }
+        #full-instructions {
+            text-align: left;
+            background-color: #fff;
+            padding: 12px;
+            border-radius: 10px;
+            margin-top: 8px;
+        }
+        #toggle-instructions {
+            cursor: pointer;
+            color: #2980b9;
+            text-decoration: underline;
+        }
+        /* Large bold time estimate */
+        .time-estimate {
+            font-size: 20px;
+            font-weight: bold;
+            color: #2c3e50;
+            margin-bottom: 15px;
+            text-align: center;
+        }
+        #abortButton {
+            position: fixed;
+            top: 10px;
+            right: 10px;
+            z-index: 1000; 
+            padding: 10px 15px;
+            background-color: #dc3545;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        #abortButton:hover {
+            background-color: #c82333;
+        }
+    </style>
+</head>
+<body>
+    <button id="abortButton" onclick="abortStudy()">Abort Study</button>
+    <h1>Belief Questionnaire</h1>
+    <div id="instructions-container" class="hidden">
+        <p id="subheader">
+            Please answer according to how you feel. To see instructions again <span id="toggle-instructions">click here</span>.
+        </p>
+        <div id="full-instructions" class="hidden">
+            <p>This questionnaire asks about beliefs you may hold. Some of the beliefs are unusual, some are more common.</p>
+            <p>We are <b>NOT</b> interested in beliefs held under the influence of drugs/alcohol.</p>
+            <p>For the questions you answer <b>YES</b> to, we are interested in:<br> 
+                (a) how <b>distressing</b> you find it.<br>
+                (b) how <b>often</b> you think about it, and <br>
+                (c) how <b>strongly</b> you believe it.<br><br>
+                You will be asked to rate these. 
+            <p>For the questions you answer <b>NO</b> to, you will have to click on three red buttons to continue to the next question.</p>
+            </div>
+    </div>
+    <div id="page0" class="page active">
+        <p class="time-estimate">This questionnaire should take at least 3 minutes.</p>
+        <p>This questionnaire asks about beliefs you may hold. Some of the beliefs are unusual, some are more common.</p>
+        <p>We are <b>NOT</b> interested in beliefs held under the influence of drugs/alcohol.</p>
+        <p>For the questions you answer <b>YES</b> to, we are interested in:<br> 
+            (a) how <b>distressing</b> you find it.<br>
+            (b) how <b>often</b> you think about it, and <br>
+            (c) how <b>strongly</b> you believe it.<br><br>
+            You will be asked to rate these.
+        <p>For the questions you answer <b>NO</b> to, you will have to click on three red buttons to continue to the next question.</p>
+        <div class="navigation">
+            <button id="start-btn" class="btn btn-primary">Start Questionnaire</button>
+        </div>
+    </div>
+    <div id="questionnaire-container"></div>
+    <script src="jatos.js"></script>
+    <script src="prolificLinks.js"></script>
+    <script src="inactivity.js"></script>
+    <script>
+        // a bit lazier here, but this is really just the capsEN.html page but reskinned for PDI questions and scales. if you want slightly more comments
+        // then check out that script on the same github -z 
+        let participantID = null;
+                    jatos.onLoad(() => {
+                        console.log("Session Data:", jatos.sessionData);
+                        participantID = jatos.studySessionData?.participantID || 'test';
+                        if (participantID !== 'test') {
+                            console.log("Participant ID from session data:", participantID);
+                        } else {
+                            console.warn("Session data or Participant ID is not set. Using fallback ID:", participantID);
+                        }
+                    });
+
+        const startTime = performance.now();
+        let attentionFails = 0; 
+        let currentPage = 0;
+        let remainingTime = 0;
+        let pageTimerInterval = null;
+
+        // PDI Questions
+        const questions = [
+            { id: 1, text: "Do you ever feel as if people seem to drop hints about you or say things with a double meaning?", isAttentionCheck: false },
+            { id: 2, text: "Do you ever feel as if things in magazines or on TV were written especially for you?", isAttentionCheck: false },
+            { id: 3, text: "Do you ever feel as if some people are not what they seem to be?", isAttentionCheck: false },
+            { id: 4, text: "Do you ever feel as if you are being persecuted in some way?", isAttentionCheck: false },
+            { id: 5, text: "Do you ever feel as if there is a conspiracy against you?", isAttentionCheck: false },
+            { id: 6, text: "Do you ever feel as if you are, or destined to be someone very important?", isAttentionCheck: false },
+            { id: 7, text: "Do you ever feel that you are a very special or unusual person?", isAttentionCheck: false },
+            { id: 8, text: "Do you ever feel that you are especially close to God?", isAttentionCheck: false },
+            { id: 9, text: "Do you ever think people can communicate telepathically?", isAttentionCheck: false },
+            { id: 10, text: "Do you ever feel as if electrical devices such as computers can influence the way you think?", isAttentionCheck: false },
+            { id: 11, text: "Do you ever feel as if you have been chosen by God in some way?", isAttentionCheck: false },
+            { id: 12, text: "Do you believe in the power of witchcraft, voodoo or the occult?", isAttentionCheck: false },
+            { id: 13, text: "Are you often worried that your partner may be unfaithful?", isAttentionCheck: false },
+            { id: 14, text: "Do you ever feel that you have sinned more than the average person?", isAttentionCheck: false },
+            { id: 15, text: "Do you ever feel that people look at you oddly because of your appearance?", isAttentionCheck: false },
+            { id: 16, text: "Do you ever feel as if you had no thoughts in your head at all?", isAttentionCheck: false },
+            { id: 17, text: "Do you ever feel as if the world is about to end?", isAttentionCheck: false },
+            { id: 18, text: "Do your thoughts ever feel alien to you in some way?", isAttentionCheck: false },
+            { id: 19, text: "Have your thoughts ever been so vivid that you were worried other people would hear them?", isAttentionCheck: false },
+            { id: 20, text: "Do you ever feel as if your own thoughts were being echoed back to you?", isAttentionCheck: false },
+            { id: 21, text: "Do you ever feel as if you are a robot or zombie without a will of your own?", isAttentionCheck: false },
+        ];
+
+        const attentionChecks = [
+            { id: "pdiAC1", text: "This is an attention check. Please select 'Yes' and then select options 2, 4, and 5 for the scales.", isAttentionCheck: true, expectedAnswers: [2, 4, 5] },
+            { id: "pdiAC2", text: "This is an attention check. Please select 'Yes' and then select options 5, 5, and 5 for the scales.", isAttentionCheck: true, expectedAnswers: [5, 5, 5] },
+        ];
+
+        const scaleQuestions = [
+            "How distressing do you find this?",
+            "How often do you think about this?",
+            "How strongly do you believe this?"
+        ];
+
+        const scaleBackgroundColors = ['#f9f9f9', '#f0f0f0', '#e8e8e8'];
+
+        const allQuestions = insertAttentionChecks(questions, attentionChecks);
+
+        function createQuestionPages() {
+            const container = document.getElementById('questionnaire-container');
+            allQuestions.forEach((questionObj, index) => {
+                const isAttentionCheck = questionObj.isAttentionCheck;
+                const pageDiv = document.createElement('div');
+                pageDiv.classList.add('page');
+                pageDiv.id = `page${index + 1}`;
+
+                pageDiv.innerHTML = `
+                    <div class="question">${questionObj.text}</div>
+                    <div class="yes-no">
+                        <button class="btn btn-yes-no" onclick="selectYesNo(${index + 1}, true, event, ${isAttentionCheck})">Yes</button>
+                        <button class="btn btn-yes-no" onclick="selectYesNo(${index + 1}, false, event, ${isAttentionCheck})">No</button>
+                    </div>
+                    <div id="instruction${index + 1}" class="instruction hidden">
+                        Please select the highlighted numbers to proceed.
+                    </div>
+                    <div id="scales${index + 1}" class="scales hidden">
+                        ${createScales(index + 1)}
+                    </div>
+                    <div class="navigation">
+                        <button id="next-btn${index + 1}" onclick="${index < allQuestions.length - 1 ? 'nextPage()' : 'confirmSubmit()'}" class="btn btn-primary" disabled>${index < allQuestions.length - 1 ? 'Next' : 'Submit'}</button>
+                    </div>
+                `;
+                container.appendChild(pageDiv);
+            });
+        }
+
+        function createScales(questionNumber) {
+            return scaleQuestions.map((scaleQuestion, idx) => `
+                <div class="scale-container hidden" data-scale-index="${idx}" style="background-color: ${scaleBackgroundColors[idx]};">
+                    <div class="scale-question">${scaleQuestion}</div>
+                    <div class="scale">
+                        <div class="scale-labels">
+                            ${getScaleLabels(idx)}
+                        </div>
+                        <div class="scale-options">
+                            ${createScaleOptions(`q${questionNumber}_${getScaleSuffix(idx)}`)}
+                        </div>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function getScaleLabels(index) {
+            const labels = [
+                `<span>Not at all distressing</span><span>Very distressing</span>`,
+                `<span>Rarely think about it</span><span>Think about it all the time</span>`,
+                `<span>Not at all convinced</span><span>Absolutely convinced</span>`
+            ];
+            return labels[index] || `<span></span><span></span>`;
+        }
+
+        function getScaleSuffix(index) {
+            const suffixes = ['distress', 'frequency', 'conviction'];
+            return suffixes[index] || '';
+        }
+
+        function createScaleOptions(name) {
+            return Array(5).fill(0).map((_, i) => `
+                <div class="scale-option" data-value="${i + 1}">
+                    <label for="${name}${i + 1}">${i + 1}</label>
+                    <input type="radio" id="${name}${i + 1}" name="${name}" value="${i + 1}">
+                </div>
+            `).join('');
+        }
+
+        function updateNextButtonStateForTimer(nextBtn) {
+            const allAnswered = areAllQuestionsAnsweredOnPage(currentPage);
+            if (remainingTime > 0) {
+                nextBtn.disabled = true;
+                nextBtn.textContent = currentPage < allQuestions.length ? `Next (${remainingTime})` : `Submit (${remainingTime})`;
+            } else {
+                nextBtn.textContent = currentPage < allQuestions.length ? 'Next' : 'Submit';
+                nextBtn.disabled = !allAnswered;
+            }
+        }
+
+        function insertAttentionChecks(questions, attentionChecks) {
+            const newQuestions = [...questions];
+            const shuffledAttentionChecks = [...attentionChecks].sort(() => Math.random() - 0.5);
+            const totalQuestions = newQuestions.length;
+            const availablePositions = [];
+
+            // Specify indices where attention checks can be inserted (after Q4)
+            for (let i = 4; i < totalQuestions; i++) {
+                availablePositions.push(i);
+            }
+            for (let i = availablePositions.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [availablePositions[i], availablePositions[j]] = [availablePositions[j], availablePositions[i]];
+            }
+            let attentionCheckIndex = 0;
+            const positionsUsed = [];
+            for (let pos of availablePositions) {
+                if (attentionCheckIndex >= shuffledAttentionChecks.length) break;
+                if (!positionsUsed.includes(pos - 1) && !positionsUsed.includes(pos + 1)) {
+                    const adjustedPos = pos + attentionCheckIndex;
+                    newQuestions.splice(adjustedPos, 0, shuffledAttentionChecks[attentionCheckIndex]);
+                    positionsUsed.push(pos);
+                    attentionCheckIndex++;
+                }
+            }
+            if (attentionCheckIndex < shuffledAttentionChecks.length) {
+                console.warn('Could not insert all attention checks without consecutive positions.');
+                for (let i = 0; i < newQuestions.length; i++) {
+                    if (attentionCheckIndex >= shuffledAttentionChecks.length) break;
+                    if (!newQuestions[i].isAttentionCheck && !newQuestions[i + 1]?.isAttentionCheck) {
+                        newQuestions.splice(i + 1, 0, shuffledAttentionChecks[attentionCheckIndex]);
+                        attentionCheckIndex++;
+                    }
+                }
+            }
+
+            return newQuestions;
+        }
+
+        function showPage(pageNumber) {
+            if (pageTimerInterval) {
+                clearInterval(pageTimerInterval);
+                pageTimerInterval = null;
+            }
+
+            document.querySelectorAll('.page').forEach(page => page.classList.remove('active'));
+            const pageToShow = document.getElementById(`page${pageNumber}`);
+            if (pageToShow) {
+                pageToShow.classList.add('active');
+                currentPage = pageNumber;
+                const timerDuration = 8; // Duration for timer per question
+                remainingTime = timerDuration;
+
+                const nextBtn = pageToShow.querySelector('.btn-primary');
+                updateNextButtonStateForTimer(nextBtn);
+
+                pageTimerInterval = setInterval(() => {
+                    remainingTime--;
+                    updateNextButtonStateForTimer(nextBtn);
+
+                    if (remainingTime <= 0) {
+                        clearInterval(pageTimerInterval);
+                        pageTimerInterval = null;
+                        updateNextButtonStateForTimer(nextBtn);
+                    }
+                }, 1000);
+            } else {
+                console.error(`Page ${pageNumber} not found`);
+            }
+        }
+
+        function nextPage() {
+            currentPage++;
+            showPage(currentPage);
+        }
+
+        function selectYesNo(questionNumber, isYes, event, isAttentionCheck) {
+            const page = document.getElementById(`page${questionNumber}`);
+            const scalesContainer = page.querySelector(`#scales${questionNumber}`);
+            const instruction = page.querySelector(`#instruction${questionNumber}`);
+            let nextBtn = page.querySelector(`#next-btn${questionNumber}`);
+            page.querySelectorAll('.btn-yes-no').forEach(btn => btn.classList.remove('selected'));
+            event.target.classList.add('selected');
+            scalesContainer.classList.remove('hidden');
+
+            scalesContainer.querySelectorAll('input[type="radio"]').forEach(input => {
+                input.checked = false;
+            });
+            scalesContainer.querySelectorAll('.scale-option').forEach(option => {
+                option.classList.remove('highlight');
+            });
+
+            const newScales = scalesContainer.cloneNode(true);
+            scalesContainer.parentNode.replaceChild(newScales, scalesContainer);
+
+            const updatedScalesContainer = page.querySelector(`#scales${questionNumber}`);
+            const updatedScaleContainers = updatedScalesContainer.querySelectorAll('.scale-container');
+            nextBtn = page.querySelector(`#next-btn${questionNumber}`);
+
+            const questionObj = allQuestions[questionNumber - 1];
+
+            if (isYes) {
+                instruction.classList.add('hidden');
+                updatedScaleContainers.forEach(container => {
+                    container.classList.remove('hidden');
+                });
+                updatedScalesContainer.querySelectorAll('input[type="radio"]').forEach(input => {
+                    input.addEventListener('change', () => {
+                        updateNextButtonStateForTimer(nextBtn);
+                    });
+                });
+            } else {
+                instruction.classList.remove('hidden');
+                updatedScaleContainers.forEach(container => {
+                    container.classList.add('hidden');
+                });
+                updatedScaleContainers.forEach((container) => {
+                    container.classList.remove('hidden');
+                    const randomValue = Math.floor(Math.random() * 5) + 1;
+                    const option = container.querySelector(`.scale-option[data-value="${randomValue}"]`);
+                    option.classList.add('highlight');
+                    const inputs = container.querySelectorAll('input[type="radio"]');
+                    inputs.forEach(input => {
+                        input.addEventListener('change', () => {
+                            updateNextButtonStateForTimer(nextBtn);
+                        });
+                    });
+                });
+            }
+
+            if (isAttentionCheck) {
+                nextBtn = page.querySelector(`#next-btn${questionNumber}`);
+                nextBtn.addEventListener('click', () => {
+                    const userAnswers = [];
+                    updatedScaleContainers.forEach((container) => {
+                        const selectedValue = parseInt(container.querySelector('input[type="radio"]:checked')?.value);
+                        userAnswers.push(selectedValue);
+                    });
+
+                    const isCorrect = questionObj.expectedAnswers.every((val, idx) => val === userAnswers[idx]);
+
+                    if (!isCorrect) {
+                        attentionFails++;
+                        questionObj.attentionFailed = true; 
+                    } else {
+                        questionObj.attentionFailed = false; 
+                    }
+                }, { once: true });
+            }
+
+            updateNextButtonStateForTimer(nextBtn);
+        }
+
+        function areHighlightedOptionsSelected(scaleContainers) {
+            let allSelected = true;
+            scaleContainers.forEach(container => {
+                const highlightedOption = container.querySelector('.scale-option.highlight input');
+                if (!highlightedOption || !highlightedOption.checked) {
+                    allSelected = false;
+                }
+            });
+            return allSelected;
+        }
+
+        function areAllQuestionsAnsweredOnPage(pageNumber) {
+            const page = document.getElementById(`page${pageNumber}`);
+            if (!page) return false;
+
+            const yesNoButtons = page.querySelectorAll('.btn-yes-no.selected');
+            if (yesNoButtons.length === 0) {
+                return false;
+            }
+
+            const selectedYes = yesNoButtons[0].textContent === 'Yes';
+
+            if (selectedYes) {
+                const scalesContainer = page.querySelector(`#scales${pageNumber}`);
+                const scaleQuestionsAnswered = scalesContainer ? scalesContainer.querySelectorAll('input[type="radio"]:checked').length : 0;
+                return scaleQuestionsAnswered === 3;
+            } else {
+                const scalesContainer = page.querySelector(`#scales${pageNumber}`);
+                const visibleScales = scalesContainer ? scalesContainer.querySelectorAll('.scale-container:not(.hidden)') : [];
+                if (visibleScales.length > 0) {
+                    return areHighlightedOptionsSelected(visibleScales);
+                }
+                return true; 
+            }
+        }
+
+        function confirmSubmit() {
+            const data = {
+                participant_id: participantID,
+                pdi_total: 0,
+                pdi_distress: 0,
+                pdi_frequency: 0,
+                pdi_conviction: 0,
+                pdi_attention_fails: attentionFails,
+                pdi_time: null, // To be calculated later
+            };
+
+            const regularQuestions = {};
+            const attentionChecksData = {};
+
+            // Helper function to convert keys to snake_case
+            function toSnakeCase(key) {
+                return key
+                    .replace(/([a-z])([A-Z])/g, '$1_$2') // Convert camelCase to snake_case
+                    .replace(/-/g, '_')                  // Convert kebab-case to snake_case
+                    .toLowerCase();                      // Ensure lowercase
+            }
+
+            for (let i = 1; i <= allQuestions.length; i++) {
+                const questionObj = allQuestions[i - 1];
+                const isAttentionCheck = questionObj.isAttentionCheck;
+                const questionId = isAttentionCheck ? toSnakeCase(questionObj.id) : `pdi_q${questionObj.id}`;
+                const questionData = {};
+
+                const yesNoButton = document.querySelector(`#page${i} .btn-yes-no.selected`);
+                if (yesNoButton) {
+                    const isYes = yesNoButton.textContent === 'Yes';
+                    questionData.answer = isYes ? 'Yes' : 'No';
+
+                    if (isAttentionCheck) {
+                        // For attention checks
+                        questionData.attention_failed = questionObj.attentionFailed || false;
+                        if (isYes) {
+                            questionData.distress = parseInt(document.querySelector(`#page${i} input[name="q${i}_distress"]:checked`)?.value) || null;
+                            questionData.frequency = parseInt(document.querySelector(`#page${i} input[name="q${i}_frequency"]:checked`)?.value) || null;
+                            questionData.conviction = parseInt(document.querySelector(`#page${i} input[name="q${i}_conviction"]:checked`)?.value) || null;
+                        }
+                        attentionChecksData[questionId] = questionData;
+                    } else if (isYes) {
+                        // For regular questions
+                        const distress = parseInt(document.querySelector(`#page${i} input[name="q${i}_distress"]:checked`)?.value) || 0;
+                        const frequency = parseInt(document.querySelector(`#page${i} input[name="q${i}_frequency"]:checked`)?.value) || 0;
+                        const conviction = parseInt(document.querySelector(`#page${i} input[name="q${i}_conviction"]:checked`)?.value) || 0;
+
+                        questionData.distress = distress;
+                        questionData.frequency = frequency;
+                        questionData.conviction = conviction;
+
+                        // Aggregate scores
+                        data.pdi_total += 1;
+                        data.pdi_distress += distress;
+                        data.pdi_frequency += frequency;
+                        data.pdi_conviction += conviction;
+                    }
+                } else {
+                    questionData.answer = null;
+                }
+
+                if (isAttentionCheck) {
+                    attentionChecksData[questionId] = questionData;
+                } else {
+                    regularQuestions[questionId] = questionData;
+                }
+            }
+
+            // Merge regular questions and attention checks into data
+            Object.assign(data, regularQuestions);
+            Object.assign(data, attentionChecksData);
+
+            // Calculate the time taken
+            const endTime = performance.now();
+            const timeTaken = (endTime - startTime) / 1000;
+            data.pdi_time = timeTaken;
+
+            // Submit the data
+            window.onbeforeunload = null; // Disable unload warning
+            jatos.submitResultData(JSON.stringify(data))
+                .then(() => {
+                    console.log('Data submitted successfully');
+                    return jatos.startNextComponent();
+                })
+                .catch((error) => {
+                    console.error("Error during submission or starting next component:", error);
+                    alert("An error occurred. Please try again or contact the researcher if the problem persists.");
+                });
+        }
+
+        createQuestionPages();
+        document.getElementById('start-btn').addEventListener('click', () => {
+            currentPage = 1;
+            showPage(currentPage);
+            document.getElementById('instructions-container').classList.remove('hidden');
+        });
+
+        document.getElementById('toggle-instructions').addEventListener('click', function() {
+            const fullInstructions = document.getElementById('full-instructions');
+            if (fullInstructions.classList.contains('hidden')) {
+                fullInstructions.classList.remove('hidden');
+                this.textContent = 'click here';
+            } else {
+                fullInstructions.classList.add('hidden');
+                this.textContent = 'click here';
+            }
+        });
+    </script>
+</body>
+</html>
