@@ -1,7 +1,7 @@
 Here are a few files for the questionnaires and other forms ie demographics / consent for online tasks in the lab. 
 
 For prolific integration:
-  1) make sure that prolificLinks.js is configured with specific links for your particular study from Prolific
+  1) make sure that prolificLinks.js is configured with specific links from Prolific for your particular study
   2) the first component of your study on JATOS needs to be the prolificLanding.html 
   3) the second component of your study should be the participant code generator
   4) make sure you record the participant code with the data for any components you have - see questionnaires for how to call it from JATOS
