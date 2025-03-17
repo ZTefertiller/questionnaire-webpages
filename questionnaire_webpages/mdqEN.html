@@ -1,0 +1,477 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Mood Questionnaire</title>
+    <link rel="stylesheet" href="questionnaireStyles.css">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        /* Existing styles */
+        body {
+            font-size: 18px;
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: auto;
+            padding: 20px;
+        }
+
+        h1, h2 {
+            font-size: 1.5em;
+        }
+
+        .checkbox-group {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+
+        .checkbox-option {
+            display: flex;
+            align-items: flex-start;
+            background: #f5f5f5;
+            border-radius: 8px;
+            padding: 12px 15px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            font-size: 16px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        .checkbox-option input[type="checkbox"] {
+            margin-right: 12px;
+            transform: scale(1.5);
+            margin-top: 3px;
+        }
+
+        .checkbox-option label {
+            font-weight: 500;
+            cursor: pointer;
+            line-height: 1.4;
+        }
+
+        .checkbox-option:hover {
+            background-color: #e0f0ff;
+        }
+
+        .btn {
+            padding: 12px 25px;
+            margin-top: 12px;
+            font-size: 1.1em;
+            border-radius: 6px;
+            cursor: pointer;
+            background-color: #2c3e50;
+            color: white;
+            border: none;
+            transition: background-color 0.3s;
+            position: relative;
+        }
+
+        .btn:hover {
+            background-color: #3b4fff;
+        }
+
+        .btn-submit {
+            margin-top: 20px;
+            display: block;
+            margin-left: auto;
+        }
+
+        #questionnaire-container {
+            position: relative;
+        }
+
+        .hidden {
+            display: none;
+        }
+
+        .btn-option {
+            padding: 12px 25px;
+            margin-top: 12px;
+            font-size: 1.1em;
+            border-radius: 6px;
+            cursor: pointer;
+            background-color: #e0e0e0;
+            color: black;
+            border: none;
+            transition: background-color 0.3s;
+        }
+
+        .btn-option.pressed {
+            background-color: #2c3e50;
+            color: white;
+        }
+
+        .button-group {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+
+        #next-button[disabled] {
+            background-color: #ccc;
+            cursor: not-allowed;
+        }
+
+        /* Navigation buttons */
+        .navigation-buttons {
+            margin-top: 20px;
+            display: flex;
+            justify-content: flex-end;
+        }
+
+        /* Selected items list */
+        .selected-items {
+            margin-top: 20px;
+            padding: 15px;
+            background-color: #eef;
+            border-radius: 8px;
+        }
+
+        /* Countdown timer in Next button */
+        #next-button {
+            position: relative;
+        }
+
+        #next-button .countdown {
+            position: absolute;
+            top: 50%;
+            right: 15px;
+            transform: translateY(-50%);
+            font-size: 0.9em;
+            color: #fff;
+        }
+    </style>
+</head>
+<body>
+    <button id="abortButton" onclick="abortStudy()">Abort Study</button>
+    <div class="container">
+        <h1>Mood Questionnaire</h1>
+        <div id="questionnaire-container">
+        </div>
+    </div>
+    <script src="jatos.js"></script>
+    <script src="prolificLinks.js"></script>
+    <script src="inactivity.js"></script>
+    <script>
+        // Note: custom styling in this script because of how questions are phrased
+        let participantID = null;
+                    jatos.onLoad(() => {
+                        console.log("Session Data:", jatos.sessionData);
+                        participantID = jatos.studySessionData?.participantID || 'test';
+                        if (participantID !== 'test') {
+                            console.log("Participant ID from session data:", participantID);
+                        } else {
+                            console.warn("Session data or Participant ID is not set. Using fallback ID:", participantID);
+                        }
+                    });
+
+        const startTime = performance.now();
+        let answers = {};
+        const questions = [
+            {
+                id: 1,
+                text: "Has there ever been a period of time when you were not your usual self and…",
+                type: "multiple",
+                options: [
+                    { value: "1a", label: "…you felt so good or so hyper that other people thought you were not your normal self or you were so hyper that you got into trouble?", displayLabel: "You felt so good or so hyper that other people thought you were not your normal self or you were so hyper that you got into trouble." },
+                    { value: "1b", label: "…you were so irritable that you shouted at people or started fights or arguments?", displayLabel: "You were so irritable that you shouted at people or started fights or arguments." },
+                    { value: "1c", label: "…you felt much more self-confident than usual?", displayLabel: "You felt much more self-confident than usual." },
+                    { value: "1d", label: "…you got much less sleep than usual and found you didn’t really miss it?", displayLabel: "You got much less sleep than usual and found you didn’t really miss it." },
+                    { value: "1e", label: "…you were much more talkative or spoke faster than usual?", displayLabel: "You were much more talkative or spoke faster than usual." },
+                    { value: "1f", label: "…thoughts raced through your head or you couldn’t slow your mind down?", displayLabel: "Thoughts raced through your head or you couldn’t slow your mind down." },
+                    { value: "1g", label: "…you were so easily distracted by things around you that you had trouble concentrating or staying on track?", displayLabel: "You were so easily distracted by things around you that you had trouble concentrating or staying on track." },
+                    { value: "attention", label: "…please click this option to confirm you are paying attention.", displayLabel: "" },
+                    { value: "1h", label: "…you had much more energy than usual?", displayLabel: "You had much more energy than usual." },
+                    { value: "1i", label: "…you were much more active or did many more things than usual?", displayLabel: "You were much more active or did many more things than usual." },
+                    { value: "1j", label: "…you were much more social or outgoing than usual, for example, you telephoned friends in the middle of the night?", displayLabel: "You were much more social or outgoing than usual, for example, you telephoned friends in the middle of the night." },
+                    { value: "1k", label: "…you were much more interested in sex than usual?", displayLabel: "You were much more interested in sex than usual." },
+                    { value: "1l", label: "…you did things that were unusual for you or that other people might have thought were excessive, foolish, or risky?", displayLabel: "You did things that were unusual for you or that other people might have thought were excessive, foolish, or risky." },
+                    { value: "1m", label: "…spending money got you or your family in trouble?", displayLabel: "Spending money got you or your family in trouble." }
+                ]
+            },
+            { id: 2, text: "If you checked YES to more than one of the above, did several of these happen during the same period?", type: "yesno" },
+            { id: 3, text: "How much of a problem did any of these cause you (work, family, social, legal, financial)?", type: "severity" },
+            { id: 4, text: "Have any of your blood relatives had manic-depressive illness or bipolar disorder?", type: "yesno" },
+            { id: 5, text: "Has a health professional ever told you that you have manic-depressive illness or bipolar disorder?", type: "yesno" }
+        ];
+
+        const yesNoOptions = [
+            { value: "yes", label: "Yes" },
+            { value: "no", label: "No" }
+        ];
+
+        const severityOptions = [
+            { value: "no_problem", label: "No Problem" },
+            { value: "minor_problem", label: "Minor Problem" },
+            { value: "moderate_problem", label: "Moderate Problem" },
+            { value: "serious_problem", label: "Serious Problem" }
+        ];
+
+        let currentQuestionIndex = 0;
+        let timer;
+        let timeElapsed = 0;
+
+        function createQuestionnaire() {
+            displayQuestion(currentQuestionIndex);
+        }
+
+        function displayQuestion(index) {
+            clearInterval(timer);
+            timeElapsed = 0;
+            const container = document.getElementById('questionnaire-container');
+            container.innerHTML = '';
+
+            if (index >= questions.length) {
+                // All questions answered, submit data
+                submitData();
+                return;
+            }
+
+            const question = questions[index];
+            const questionContainer = document.createElement('div');
+            questionContainer.classList.add('question-container');
+            questionContainer.id = `question-container-${question.id}`;
+
+            const questionDiv = document.createElement('div');
+            questionDiv.classList.add('question');
+            questionDiv.innerHTML = `${question.text}`;
+            questionContainer.appendChild(questionDiv);
+
+            // Display selected items from Question 1 if on Question 2 or 3
+            if ((question.id === 2 || question.id === 3) && answers[1]) {
+                const selectedItemsDiv = document.createElement('div');
+                selectedItemsDiv.classList.add('selected-items');
+                const selectedLabels = questions[0].options
+                    .filter(opt => answers[1].includes(opt.value) && opt.value !== 'attention')
+                    .map(opt => opt.displayLabel);
+                selectedItemsDiv.innerHTML = `<strong>You selected the following:</strong><br>${selectedLabels.join('<br>')}`;
+                questionContainer.appendChild(selectedItemsDiv);
+            }
+
+            if (question.type === "multiple") {
+                const optionGroup = document.createElement('div');
+                optionGroup.classList.add('checkbox-group');
+
+                question.options.forEach(option => {
+                    const optionDiv = document.createElement('div');
+                    optionDiv.classList.add('checkbox-option');
+
+                    const checkbox = document.createElement('input');
+                    checkbox.type = 'checkbox';
+                    checkbox.id = `question${question.id}_${option.value}`;
+                    checkbox.name = `question${question.id}`;
+                    checkbox.value = option.value;
+                    checkbox.onchange = () => selectCheckboxAnswer(question.id, option.value, checkbox);
+
+                    const label = document.createElement('label');
+                    label.htmlFor = `question${question.id}_${option.value}`;
+                    label.textContent = option.label;
+
+                    optionDiv.appendChild(checkbox);
+                    optionDiv.appendChild(label);
+                    optionGroup.appendChild(optionDiv);
+                });
+                questionContainer.appendChild(optionGroup);
+            } else if (question.type === "severity" || question.type === "yesno") {
+                const buttonGroup = document.createElement('div');
+                buttonGroup.classList.add('button-group');
+
+                const options = question.type === "severity" ? severityOptions : yesNoOptions;
+
+                options.forEach(option => {
+                    const button = document.createElement('button');
+                    button.classList.add('btn-option');
+                    button.textContent = option.label;
+                    button.onclick = () => selectAnswer(question.id, option.value, button);
+                    buttonGroup.appendChild(button);
+                });
+                questionContainer.appendChild(buttonGroup);
+            }
+
+            container.appendChild(questionContainer);
+
+            // Navigation buttons
+            const navDiv = document.createElement('div');
+            navDiv.classList.add('navigation-buttons');
+
+            const nextBtn = document.createElement('button');
+            nextBtn.classList.add('btn');
+            nextBtn.textContent = "Next";
+            nextBtn.id = 'next-button';
+            nextBtn.disabled = true;
+            nextBtn.onclick = () => {
+                // Handle conditional display of questions 2 and 3
+                if (question.id === 1) {
+                    const selectedOptions = answers[question.id];
+                    const attentionChecked = selectedOptions && selectedOptions.includes('attention');
+                    if (!attentionChecked) {
+                        alert('Please select the required option before proceeding.');
+                        return;
+                    }
+                    const numberOfOptionsSelected = selectedOptions ? selectedOptions.length - (attentionChecked ? 1 : 0) : 0;
+                    if (numberOfOptionsSelected > 1) {
+                        // Proceed to question 2
+                        currentQuestionIndex++;
+                    } else {
+                        // Skip questions 2 and 3
+                        currentQuestionIndex = 3; // Skip to question 4
+                    }
+                } else {
+                    currentQuestionIndex++;
+                }
+                displayQuestion(currentQuestionIndex);
+            };
+            navDiv.appendChild(nextBtn);
+
+            container.appendChild(navDiv);
+
+            // Start timer
+            let minTime;
+            if (index === 0) {
+                minTime = 60;
+            } else if (questions[index].id === 2 || questions[index].id === 3) {
+                minTime = 5;
+            } else {
+                minTime = 5;
+            }
+            let remainingTime = minTime;
+            nextBtn.textContent = `Next (${remainingTime})`;
+            timer = setInterval(() => {
+                timeElapsed++;
+                remainingTime--;
+                nextBtn.textContent = `Next (${remainingTime})`;
+                if (timeElapsed >= minTime) {
+                    clearInterval(timer);
+                    checkNextButtonCondition();
+                }
+            }, 1000);
+
+            checkNextButtonCondition();
+        }
+
+        function checkNextButtonCondition() {
+            const nextBtn = document.getElementById('next-button');
+            const question = questions[currentQuestionIndex];
+            let conditionsMet = false;
+
+            const minTime = (currentQuestionIndex === 0) ? 60 : (questions[currentQuestionIndex].id === 2 || questions[currentQuestionIndex].id === 3) ? 5 : 5;
+
+            if (question.id === 1) {
+                // For question 1, attention checkbox must be checked, and min time must have passed
+                const selectedOptions = answers[question.id];
+                const attentionChecked = selectedOptions && selectedOptions.includes('attention');
+                if (attentionChecked && timeElapsed >= minTime) {
+                    conditionsMet = true;
+                }
+            } else {
+                // For other questions, min time must have passed, and question must be answered
+                if (timeElapsed >= minTime && answers[question.id] !== undefined) {
+                    conditionsMet = true;
+                }
+            }
+
+            if (conditionsMet) {
+                nextBtn.disabled = false;
+                nextBtn.textContent = (currentQuestionIndex === questions.length - 1) ? "Submit" : "Next";
+            }
+        }
+
+        function selectCheckboxAnswer(questionId, optionValue, checkbox) {
+            if (!answers[questionId]) {
+                answers[questionId] = [];
+            }
+            if (checkbox.checked) {
+                answers[questionId].push(optionValue);
+                checkbox.parentNode.style.backgroundColor = "#e0f0ff";
+            } else {
+                answers[questionId] = answers[questionId].filter(value => value !== optionValue);
+                checkbox.parentNode.style.backgroundColor = "#f5f5f5";
+            }
+            checkNextButtonCondition();
+        }
+
+        function selectAnswer(questionId, value, selectedButton) {
+            answers[questionId] = value;
+            const buttonGroup = selectedButton.parentNode;
+            buttonGroup.querySelectorAll('button').forEach(button => {
+                button.classList.remove('pressed');
+            });
+            selectedButton.classList.add('pressed');
+            checkNextButtonCondition();
+        }
+
+        function submitData() {
+            const endTime = performance.now();
+            const timeTaken = (endTime - startTime) / 1000;
+            const data = {};
+            data['participant_id'] = participantID;
+            let unansweredQuestions = [];
+            questions.forEach((question) => {
+                const answer = answers[question.id];
+                if (question.id === 1) {
+                    if (answer && answer.length > 0) {
+                        data[`mdq_q${question.id}`] = answer;
+                    } else {
+                        data[`mdq_q${question.id}`] = "none";
+                    }
+                } else if (question.id === 2 || question.id === 3) {
+                    // Apply the same display condition
+                    const selectedOptions = answers[1];
+                    const attentionChecked = selectedOptions && selectedOptions.includes('attention');
+                    const numberOfOptionsSelected = selectedOptions ? selectedOptions.length - (attentionChecked ? 1 : 0) : 0;
+                    if (numberOfOptionsSelected > 1) {
+                        if (answer !== undefined) {
+                            data[`mdq_q${question.id}`] = answer;
+                        } else {
+                            unansweredQuestions.push(question.id);
+                        }
+                    } else {
+                        data[`mdq_q${question.id}`] = "none";
+                    }
+                } else {
+                    if (answer !== undefined) {
+                        data[`mdq_q${question.id}`] = answer;
+                    } else {
+                        unansweredQuestions.push(question.id);
+                    }
+                }
+            });
+
+
+            const mdq_total = answers[1] ? answers[1].length - (answers[1].includes('attention') ? 1 : 0) : 0;
+            data['mdq_total'] = mdq_total;
+
+            // MDQ further screening criteria met?
+            let mdq_further_screening = false;
+
+            if (
+                mdq_total >= 7 &&
+                data['mdq_q2'] === 'yes' &&
+                (data['mdq_q3'] === 'moderate_problem' || data['mdq_q3'] === 'serious_problem')
+            ) {
+                mdq_further_screening = true;
+            }
+
+            data['mdq_further_screening'] = mdq_further_screening;
+            data['mdq_time'] = timeTaken;
+            console.log("Submitting data:", JSON.stringify(data));
+            jatos.submitResultData(JSON.stringify(data)).then(() => {
+                console.log('Data submitted successfully');
+                jatos.startNextComponent();
+            }).catch((error) => {
+                console.error("Submission error:", error);
+            });
+        }
+
+        // Initialize
+        document.addEventListener('DOMContentLoaded', () => {
+            createQuestionnaire();
+        });
+
+
+    </script>
+</body>
+</html>

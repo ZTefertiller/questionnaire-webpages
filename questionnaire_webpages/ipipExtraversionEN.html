@@ -1,0 +1,295 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Social Survey</title>
+    <style>
+        body {
+            font-family: 'Opendyslexic', Arial, sans-serif;
+            font-size: 18px;
+            line-height: 1.6;
+            color: #333;
+            background-color: #f0f8ff;
+            margin: 20px;
+        }
+        .container {
+            max-width: 1100px;
+            margin: auto;
+            padding: 20px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            background-color: #f9f9f9;
+        }
+        h1 {
+            text-align: center;
+            font-size: 24px;
+        }
+        p {
+            text-align: center;
+        }
+        table {
+            width: 100%;
+            margin-top: 20px;
+            border-collapse: collapse;
+        }
+        #abortButton {
+            position: fixed;
+            top: 10px;
+            right: 10px;
+            z-index: 1000;
+        }
+        th, td {
+            padding: 12px;
+            text-align: center;
+            border: 1px solid #ddd;
+        }
+        th {
+            background-color: #f0f0f0;
+            font-size: 18px;
+        }
+        td:first-child {
+            text-align: left;
+            padding-left: 20px;
+        }
+        /* Alternating row colors */
+        tr:nth-child(2n+2) {
+            background-color: #ffffff;
+        }
+        tr:nth-child(2n+3) {
+            background-color: #f3f3f3;
+        }
+        input[type="radio"] {
+            width: 20px;
+            height: 20px;
+            accent-color: #0073e6;
+        }
+        .button-container {
+            text-align: right;
+            margin-top: 20px;
+        }
+        .submit-btn {
+            font-size: 18px;
+            padding: 10px 20px;
+            background-color: #ccc;
+            color: black;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        .submit-btn:hover {
+            background-color: #999;
+        }
+        #abortButton {
+            position: fixed;
+            top: 10px;
+            right: 10px;
+            z-index: 1000; 
+            padding: 10px 15px;
+            background-color: #dc3545;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        #abortButton:hover {
+            background-color: #c82333;
+        }
+    </style>
+</head>
+<button id="abortButton" onclick="abortStudy()">Abort Study</button>
+<body>
+    <div class="container">
+        <h1>Social Survey</h1>
+        <p id="loadingMessage"></p> 
+        <p>Rate how much you agree with the following statements.</p>
+        <form id="social-survey-form">
+            <table>
+                <tr>
+                    <th></th>
+                    <th>Strongly Disagree</th>
+                    <th>Disagree</th>
+                    <th>Agree</th>
+                    <th>Strongly Agree</th>
+                </tr>
+                <tr>
+                    <td>1. I am the life of the party.</td>
+                    <td><input type="radio" name="q1" value="1"></td>
+                    <td><input type="radio" name="q1" value="2"></td>
+                    <td><input type="radio" name="q1" value="3"></td>
+                    <td><input type="radio" name="q1" value="4"></td>
+                </tr>
+                <tr>
+                    <td>2. I don't talk a lot.</td>
+                    <td><input type="radio" name="q2" value="1"></td>
+                    <td><input type="radio" name="q2" value="2"></td>
+                    <td><input type="radio" name="q2" value="3"></td>
+                    <td><input type="radio" name="q2" value="4"></td>
+                </tr>
+                <tr>
+                    <td>3. I feel comfortable around people.</td>
+                    <td><input type="radio" name="q3" value="1"></td>
+                    <td><input type="radio" name="q3" value="2"></td>
+                    <td><input type="radio" name="q3" value="3"></td>
+                    <td><input type="radio" name="q3" value="4"></td>
+                </tr>
+                <tr>
+                    <td>4. I keep in the background.</td>
+                    <td><input type="radio" name="q4" value="1"></td>
+                    <td><input type="radio" name="q4" value="2"></td>
+                    <td><input type="radio" name="q4" value="3"></td>
+                    <td><input type="radio" name="q4" value="4"></td>
+                </tr>
+                <!-- Attention Check Question -->
+                <tr>
+                    <td>5. Please select 'Agree' for this question.</td>
+                    <td><input type="radio" name="q5" value="1"></td>
+                    <td><input type="radio" name="q5" value="2"></td>
+                    <td><input type="radio" name="q5" value="3"></td>
+                    <td><input type="radio" name="q5" value="4"></td>
+                </tr>
+                <tr>
+                    <td>6. I start conversations.</td>
+                    <td><input type="radio" name="q6" value="1"></td>
+                    <td><input type="radio" name="q6" value="2"></td>
+                    <td><input type="radio" name="q6" value="3"></td>
+                    <td><input type="radio" name="q6" value="4"></td>
+                </tr>
+                <tr>
+                    <td>7. I have little to say.</td>
+                    <td><input type="radio" name="q7" value="1"></td>
+                    <td><input type="radio" name="q7" value="2"></td>
+                    <td><input type="radio" name="q7" value="3"></td>
+                    <td><input type="radio" name="q7" value="4"></td>
+                </tr>
+                <tr>
+                    <td>8. I talk to a lot of different people at parties.</td>
+                    <td><input type="radio" name="q8" value="1"></td>
+                    <td><input type="radio" name="q8" value="2"></td>
+                    <td><input type="radio" name="q8" value="3"></td>
+                    <td><input type="radio" name="q8" value="4"></td>
+                </tr>
+                <tr>
+                    <td>9. I don't like to draw attention to myself.</td>
+                    <td><input type="radio" name="q9" value="1"></td>
+                    <td><input type="radio" name="q9" value="2"></td>
+                    <td><input type="radio" name="q9" value="3"></td>
+                    <td><input type="radio" name="q9" value="4"></td>
+                </tr>
+                <tr>
+                    <td>10. I don't mind being the center of attention.</td>
+                    <td><input type="radio" name="q10" value="1"></td>
+                    <td><input type="radio" name="q10" value="2"></td>
+                    <td><input type="radio" name="q10" value="3"></td>
+                    <td><input type="radio" name="q10" value="4"></td>
+                </tr>
+                <tr>
+                    <td>11. I am quiet around strangers.</td>
+                    <td><input type="radio" name="q11" value="1"></td>
+                    <td><input type="radio" name="q11" value="2"></td>
+                    <td><input type="radio" name="q11" value="3"></td>
+                    <td><input type="radio" name="q11" value="4"></td>
+                </tr>
+            </table>
+
+            <div class="button-container">
+                <button type="button" class="submit-btn" onclick="submitData()">Submit</button>
+                <!-- Removed Abort button from here -->
+            </div>
+        </form>
+    </div>
+    <script src="jatos.js"></script>
+    <script src="prolificLinks.js"></script>
+    <script src="inactivity.js"></script>
+    <script>
+        let participantID = null;
+            jatos.onLoad(() => {
+                console.log("Session Data:", jatos.sessionData);
+                participantID = jatos.studySessionData?.participantID || 'test';
+                if (participantID !== 'test') {
+                    console.log("Participant ID from session data:", participantID);
+                } else {
+                    console.warn("Session data or Participant ID is not set. Using fallback ID:", participantID);
+                }
+            });
+
+        const submitButton = document.querySelector('.submit-btn'); // Select the submit button
+        let timeLeft = 45; // Initial countdown time (in seconds)
+        const countdownInterval = 1000; // Interval in milliseconds (1 second)
+
+        // Disable the button initially and set the countdown text
+        submitButton.disabled = true;
+        submitButton.textContent = `Submit (${timeLeft})`;
+
+        // Countdown function
+        const countdownTimer = setInterval(() => {
+            timeLeft--;
+            if (timeLeft > 0) {
+                submitButton.textContent = `Submit (${timeLeft})`;
+            } else {
+                clearInterval(countdownTimer);
+                submitButton.textContent = 'Submit';
+                submitButton.disabled = false;
+            }
+        }, countdownInterval);
+
+        const start_time = performance.now();
+
+        // Function to submit data
+        function submitData() {
+            const answers = {};
+            answers['participant_id'] = participantID; // snake_case key
+            let allAnswered = true;
+            const end_time = performance.now();
+            const time_taken = (end_time - start_time) / 1000; // Time in seconds
+            let attention_check_passed = false;
+
+            // Get responses
+            for (let i = 1; i <= 11; i++) {
+                const response = document.querySelector(`input[name="q${i}"]:checked`);
+                if (response) {
+                    answers[`ipip_q${i}`] = parseInt(response.value, 10); 
+                    if (i === 5) {
+                        // Attention check question
+                        if (response.value === '3') {
+                            attention_check_passed = true;
+                        }
+                    }
+                } else {
+                    allAnswered = false;
+                    break;
+                }
+            }
+
+            if (!allAnswered) {
+                alert("Please answer all questions before submitting.");
+                return;
+            }
+
+            // Calculate total score before assigning to answers
+            let totalScore = Object.keys(answers)
+                .filter(key => key.startsWith('ipip_q') && key !== 'ipip_q5') // Exclude attention check
+                .reduce((sum, key) => sum + answers[key], 0);
+
+            // Then assign it to answers
+            answers['ipip_total_score'] = totalScore;
+            answers['ipip_time'] = time_taken;
+            answers['ipip_attention_passed'] = attention_check_passed;
+
+            console.log("Submitting data:", JSON.stringify(answers));
+
+            jatos.submitResultData(JSON.stringify(answers))
+                .then(() => {
+                    console.log('Data submitted successfully');
+                    return jatos.startNextComponent();
+                })
+                .catch(error => {
+                    console.error('Error submitting data:', error);
+                    alert("There was an error submitting your data. Please try again.");
+                });
+        }
+
+
+    </script>
+</body>
+</html>

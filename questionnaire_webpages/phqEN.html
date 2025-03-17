@@ -1,0 +1,293 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>PHQ-9</title>
+    <link rel="stylesheet" href="questionnaireStyles.css">
+    <style>
+        /* Styling for readability and accessibility */
+        body {
+            font-family: 'Opendyslexic', Geneva, Tahoma, sans-serif;
+            font-size: 18px;
+            margin: 20px;
+            line-height: 1.6;
+        }
+        .container {
+            max-width: 1100px; /* Adjusted width */
+            margin: auto;
+            padding: 20px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            background-color: #f9f9f9;
+        }
+        h1 {
+            text-align: center;
+            font-size: 24px;
+        }
+        p {
+            text-align: center; /* Centered instructions */
+        }
+        table {
+            width: 100%;
+            margin-top: 20px;
+            border-collapse: collapse;
+        }
+        th, td {
+            padding: 12px;
+            text-align: center;
+            border: 1px solid #ddd; /* Added gridlines */
+        }
+        th {
+            background-color: #f0f0f0;
+            font-size: 18px;
+            width: 18%; /* Adjusted width for equal spacing */
+        }
+        td:first-child {
+            text-align: left;
+            padding-left: 20px;
+            width: 28%; /* Reduced question column width */
+        }
+        /* Alternating row colors, starting with first question row as white */
+        tr:nth-child(2n+2) {
+            background-color: #ffffff;
+        }
+        tr:nth-child(2n+3) {
+            background-color: #f3f3f3;
+        }
+        input[type="radio"] {
+            width: 20px;
+            height: 20px;
+            accent-color: #0073e6;
+        }
+        #q10-container {
+            margin-top: 20px;
+            padding: 15px;
+            background-color: #e8f4fd;
+            border-radius: 5px;
+        }
+        #abortButton {
+            position: fixed;
+            top: 10px;
+            right: 10px;
+            z-index: 1000; 
+        }
+        label {
+            display: block;
+            margin-top: 10px;
+            font-size: 18px;
+        }
+        .button-container {
+            text-align: right;
+            margin-top: 20px;
+        }
+        .submit-btn {
+            font-size: 18px;
+            padding: 10px 20px;
+            background-color: #ccc; /* Gray color for submit button */
+            color: black;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        .submit-btn:hover {
+            background-color: #999;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Mental Health Questionnaire</h1>
+        <p>Over the last 2 weeks, how often have you been bothered by any of the following problems? (Please tick a box for each item).</p>
+        <form id="phq9-form">
+            <table>
+                <tr>
+                    <th>          </th>
+                    <th>Not at all</th>
+                    <th>Several days</th>
+                    <th>More than half the days</th>
+                    <th>Nearly every day</th>
+                </tr>
+                <tr>
+                    <td>1. Little interest or pleasure in doing things</td>
+                    <td><input type="radio" name="phq1" value="0" onclick="checkDisplayQ10()"></td>
+                    <td><input type="radio" name="phq1" value="1" onclick="checkDisplayQ10()"></td>
+                    <td><input type="radio" name="phq1" value="2" onclick="checkDisplayQ10()"></td>
+                    <td><input type="radio" name="phq1" value="3" onclick="checkDisplayQ10()"></td>
+                </tr>
+                <tr>
+                    <td>2. Feeling down, depressed, or hopeless</td>
+                    <td><input type="radio" name="phq2" value="0" onclick="checkDisplayQ10()"></td>
+                    <td><input type="radio" name="phq2" value="1" onclick="checkDisplayQ10()"></td>
+                    <td><input type="radio" name="phq2" value="2" onclick="checkDisplayQ10()"></td>
+                    <td><input type="radio" name="phq2" value="3" onclick="checkDisplayQ10()"></td>
+                </tr>
+                <tr>
+                    <td>3. Trouble falling or staying asleep, or sleeping too much</td>
+                    <td><input type="radio" name="phq3" value="0" onclick="checkDisplayQ10()"></td>
+                    <td><input type="radio" name="phq3" value="1" onclick="checkDisplayQ10()"></td>
+                    <td><input type="radio" name="phq3" value="2" onclick="checkDisplayQ10()"></td>
+                    <td><input type="radio" name="phq3" value="3" onclick="checkDisplayQ10()"></td>
+                </tr>
+                <tr>
+                    <td>4. Feeling tired or having little energy</td>
+                    <td><input type="radio" name="phq4" value="0" onclick="checkDisplayQ10()"></td>
+                    <td><input type="radio" name="phq4" value="1" onclick="checkDisplayQ10()"></td>
+                    <td><input type="radio" name="phq4" value="2" onclick="checkDisplayQ10()"></td>
+                    <td><input type="radio" name="phq4" value="3" onclick="checkDisplayQ10()"></td>
+                </tr>
+                <tr>
+                    <td>5. Poor appetite or overeating</td>
+                    <td><input type="radio" name="phq5" value="0" onclick="checkDisplayQ10()"></td>
+                    <td><input type="radio" name="phq5" value="1" onclick="checkDisplayQ10()"></td>
+                    <td><input type="radio" name="phq5" value="2" onclick="checkDisplayQ10()"></td>
+                    <td><input type="radio" name="phq5" value="3" onclick="checkDisplayQ10()"></td>
+                </tr>
+                <!-- Attention Check Question -->
+                <tr>
+                    <td>6. Please select 'Nearly every day' to show us you are paying attention.</td>
+                    <td><input type="radio" name="attentionCheck" value="0" onclick="checkDisplayQ10()"></td>
+                    <td><input type="radio" name="attentionCheck" value="1" onclick="checkDisplayQ10()"></td>
+                    <td><input type="radio" name="attentionCheck" value="2" onclick="checkDisplayQ10()"></td>
+                    <td><input type="radio" name="attentionCheck" value="3" onclick="checkDisplayQ10()"></td>
+                </tr>
+                <!-- Continue with adjusted numbering -->
+                <tr>
+                    <td>7. Feeling bad about yourself or that you are a failure or have let yourself or your family down</td>
+                    <td><input type="radio" name="phq6" value="0" onclick="checkDisplayQ10()"></td>
+                    <td><input type="radio" name="phq6" value="1" onclick="checkDisplayQ10()"></td>
+                    <td><input type="radio" name="phq6" value="2" onclick="checkDisplayQ10()"></td>
+                    <td><input type="radio" name="phq6" value="3" onclick="checkDisplayQ10()"></td>
+                </tr>
+                <tr>
+                    <td>8. Trouble concentrating on things, such as reading the newspaper or watching television</td>
+                    <td><input type="radio" name="phq7" value="0" onclick="checkDisplayQ10()"></td>
+                    <td><input type="radio" name="phq7" value="1" onclick="checkDisplayQ10()"></td>
+                    <td><input type="radio" name="phq7" value="2" onclick="checkDisplayQ10()"></td>
+                    <td><input type="radio" name="phq7" value="3" onclick="checkDisplayQ10()"></td>
+                </tr>
+                <tr>
+                    <td>9. Moving or speaking so slowly that other people could have noticed. Or the opposite—being so fidgety or restless that you've been moving around a lot more than usual</td>
+                    <td><input type="radio" name="phq8" value="0" onclick="checkDisplayQ10()"></td>
+                    <td><input type="radio" name="phq8" value="1" onclick="checkDisplayQ10()"></td>
+                    <td><input type="radio" name="phq8" value="2" onclick="checkDisplayQ10()"></td>
+                    <td><input type="radio" name="phq8" value="3" onclick="checkDisplayQ10()"></td>
+                </tr>
+                <tr>
+                    <td>10. Thoughts that you would be better off dead, or of hurting yourself</td>
+                    <td><input type="radio" name="phq9" value="0" onclick="checkDisplayQ10()"></td>
+                    <td><input type="radio" name="phq9" value="1" onclick="checkDisplayQ10()"></td>
+                    <td><input type="radio" name="phq9" value="2" onclick="checkDisplayQ10()"></td>
+                    <td><input type="radio" name="phq9" value="3" onclick="checkDisplayQ10()"></td>
+                </tr>
+            </table>
+            <div id="q10-container" style="display:none;">
+                <p>11. If you checked off any problems, how difficult have these problems made it for you to do your work, take care of things at home, or get along with other people?</p>
+                <label><input type="radio" name="phq10" value="0"> Not difficult at all</label>
+                <label><input type="radio" name="phq10" value="1"> Somewhat difficult</label>
+                <label><input type="radio" name="phq10" value="2"> Very difficult</label>
+                <label><input type="radio" name="phq10" value="3"> Extremely difficult</label>
+            </div>
+            <div class="button-container">
+                <button type="button" class="submit-btn" onclick="submitData()">Submit</button>
+            </div>
+        </form>
+    </div>
+    <button id="abortButton" onclick="abortStudy()">Abort Study</button>
+    <script src="jatos.js"></script>
+    <script src="prolificLinks.js"></script>
+    <script src="inactivity.js"></script>
+    <script>
+        let participantID = null;
+                    jatos.onLoad(() => {
+                        console.log("Session Data:", jatos.sessionData);
+                        participantID = jatos.studySessionData?.participantID || 'test';
+                        if (participantID !== 'test') {
+                            console.log("Participant ID from session data:", participantID);
+                        } else {
+                            console.warn("Session data or Participant ID is not set. Using fallback ID:", participantID);
+                        }
+                    });
+                    
+        const startTime = performance.now();
+        const answers = {};
+
+        function checkDisplayQ10() {
+            const form = document.getElementById('phq9-form');
+            let displayQ10 = false;
+            for (let i = 1; i <= 9; i++) {
+                const response = form.querySelector(`input[name="phq${i}"]:checked`);
+                if (response && response.value >= 1) {
+                    displayQ10 = true;
+                    break;
+                }
+            }
+            document.getElementById('q10-container').style.display = displayQ10 ? 'block' : 'none';
+        }
+
+        function submitData() {
+            const form = document.getElementById('phq9-form');
+            let totalScore = 0;
+            let allAnswered = true;
+            const endTime = performance.now();
+            const timeTaken = (endTime - startTime) / 1000;
+            answers['participant_id'] = participantID;
+            // Collect answers for PHQ questions
+            for (let i = 1; i <= 9; i++) {
+                // Adjust index for numbering shift due to attention check
+                let questionIndex = i;
+                if (i >= 6) {
+                    questionIndex = i + 1; // Skip attention check
+                }
+                const response = form.querySelector(`input[name="phq${i}"]:checked`);
+                if (response) {
+                    answers[`phq_q${i}`] = parseInt(response.value);
+                    totalScore += answers[`phq_q${i}`];
+                } else {
+                    allAnswered = false;
+                }
+            }
+
+            // Handle attention check
+            const attentionResponse = form.querySelector('input[name="attentionCheck"]:checked');
+            if (attentionResponse) {
+                const selectedValue = parseInt(attentionResponse.value);
+                // Correct answer is 'Nearly every day' which has a value of 3
+                answers['phq_attention_fails'] = selectedValue === 3 ? 0 : 1;
+            } else {
+                allAnswered = false;
+            }
+
+            const q10Response = form.querySelector('input[name="phq10"]:checked');
+            if (document.getElementById('q10-container').style.display === 'block') {
+                if (q10Response) {
+                    answers['phq_q10'] = parseInt(q10Response.value);
+                } else {
+                    allAnswered = false;
+                }
+            }
+
+            if (!allAnswered) {
+                alert("Please answer all questions before submitting.");
+                return;
+            }
+
+            answers['phq_total'] = totalScore;
+            answers['phq_severity'] = interpretSeverity(totalScore);
+            answers['phq_time'] = timeTaken;
+
+            console.log("Submitting data:", JSON.stringify(answers));
+            jatos.submitResultData(JSON.stringify(answers));
+            jatos.startNextComponent();
+        }
+
+        function interpretSeverity(score) {
+            if (score <= 4) return "Minimal depression";
+            if (score <= 9) return "Mild depression";
+            if (score <= 14) return "Moderate depression";
+            if (score <= 19) return "Moderately severe depression";
+            return "Severe depression";
+        }
+
+    </script>
+</body>
+</html>

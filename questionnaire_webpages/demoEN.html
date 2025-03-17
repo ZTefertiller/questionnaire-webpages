@@ -1,0 +1,835 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Demographic Survey</title>
+    <style>
+        body {
+            font-family: "OpenDyslexic", Arial, sans-serif;
+            font-size: 18px;
+            line-height: 1.8;
+            color: #333;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f0f8ff;
+        }
+        h1 {
+            text-align: center;
+            color: #2c3e50;
+            font-size: 28px;
+        }
+        label {
+            display: block;
+            margin-top: 15px;
+            font-weight: bold;
+        }
+        #abortButton {
+            position: fixed;
+            top: 10px;
+            right: 10px;
+            z-index: 1000;
+        }
+        input, select {
+            margin-top: 5px;
+            padding: 10px;
+            font-size: 16px;
+            width: 100%;
+            max-width: 400px;
+        }
+        .radio-group {
+            margin-top: 10px;
+            display: flex;
+            flex-direction: column;
+        }
+        .radio-option {
+            display: flex;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+        .radio-option label {
+            margin: 0;
+            font-weight: normal;
+        }
+        input[type="radio"] {
+            margin-right: 10px;
+            width: 20px;
+            height: 20px;
+        }
+        .hidden {
+            display: none;
+        }
+        .divider {
+            margin: 20px 0;
+            border-bottom: 2px solid #ccc;
+        }
+        .btn {
+            padding: 15px 40px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 22px;
+            background-color: #34495e;
+            color: white;
+            margin-top: 20px;
+        }
+
+        .btn:disabled {
+            background-color: grey;
+            cursor: not-allowed;
+            color: #ccc;
+        }
+        select {
+            margin-top: 5px;
+            margin-bottom: 10px;
+        }
+        p {
+            margin-top: 5px;
+            margin-bottom: 5px;
+        }
+        #abortButton {
+            position: fixed;
+            top: 10px;
+            right: 10px;
+            z-index: 1000; 
+            padding: 10px 15px;
+            background-color: #dc3545;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        #abortButton:hover {
+            background-color: #c82333;
+        }
+    </style>
+</head>
+<button id="abortButton" onclick="abortStudy()">Abort Study</button>
+<body>
+    <h1>Demographic Survey</h1>
+    <form id="surveyForm">
+
+        <!-- Gender -->
+        <label for="gender">Gender</label>
+        <select id="gender" name="gender" required>
+            <option value="">Select gender</option>
+            <option value="male">Male</option>
+            <option value="female">Female</option>
+            <option value="diverse">Non-binary/Prefer not to say</option>
+        </select>
+
+        <!-- Vision -->
+        <label for="vision">Do you wear glasses, contacts, or have a visual disability?</label>
+        <select id="vision" name="vision" required>
+            <option value="">Select an option</option>
+            <option value="glasses">Glasses</option>
+            <option value="contacts">Contacts</option>
+            <option value="no-restriction">No significant visual impairment</option>
+        </select>
+        
+        <div style="margin-top: 20px; padding-bottom: 10px;">
+            <label for="colorblindness" style="font-size: 18px; font-weight: bold;">Are you colorblind?</label>
+            <div class="radio-group" style="margin-top: 10px;">
+                <div class="radio-option">
+                    <input type="radio" id="colorblindYes" name="colorblindness" value="yes" onclick="toggleColorblindType(true)" required>
+                    <label for="colorblindYes">Yes</label>
+                </div>
+                <div class="radio-option">
+                    <input type="radio" id="colorblindNo" name="colorblindness" value="no" onclick="toggleColorblindType(false)">
+                    <label for="colorblindNo">No</label>
+                </div>
+            </div>
+
+            <div id="colorblindTypeField" class="hidden" style="margin-top: 15px;">
+                <label for="colorblindType" style="font-size: 16px;">What kind of colorblindness affects you?</label>
+                <select id="colorblindType" name="colorblindType" style="margin-top: 5px; padding: 10px; width: 100%; max-width: 400px;">
+                    <option value="">Select an option</option>
+                    <option value="protanopia">Protanopia (Red-green colorblindness)</option>
+                    <option value="deuteranopia">Deuteranopia (Green-red colorblindness)</option>
+                    <option value="tritanopia">Tritanopia (Blue-yellow colorblindness)</option>
+                    <option value="unknown">I don't know</option>
+                </select>
+            </div>
+        </div>
+
+        <!-- Hearing Impairment -->
+        <label>Do you have a hearing impairment?</label>
+        <div class="radio-group">
+            <div class="radio-option">
+                <input type="radio" id="hearingAid" name="hearing" value="hearing-aid">
+                <label for="hearingAid">Yes, and I use a hearing aid</label>
+            </div>
+            <div class="radio-option">
+                <input type="radio" id="slightLimitation" name="hearing" value="slight-limitation">
+                <label for="slightLimitation">Yes, my hearing is slightly impaired.</label>
+            </div>
+            <div class="radio-option">
+                <input type="radio" id="noHearingRestriction" name="hearing" value="no-restriction" required>
+                <label for="noHearingRestriction">No significant hearing impairment.</label>
+            </div>
+        </div>
+
+        <!-- First Language -->
+        <div class="divider"></div>
+        <label for="firstLanguage">First language</label>
+        <select id="firstLanguage" name="firstLanguage" onchange="toggleOtherLanguageInput(this)" required>
+            <option value="">Select language</option>
+            <option value="english">English</option>
+            <option value="german">German</option>
+            <option value="french">French</option>
+            <option value="spanish">Spanish</option>
+            <option value="italian">Italian</option>
+            <option value="other">Other</option>
+        </select>
+        <div id="otherLanguageField" class="hidden">
+            <label for="otherLanguage">Please specify your first language</label>
+            <input type="text" id="otherLanguage" name="otherLanguage">
+        </div>
+
+        <!-- Multilingual -->
+        <div style="margin-top: 20px;">
+            <label for="multilingual" style="font-size: 18px; font-weight: bold; display: block; margin-bottom: 10px;">Do you know more than one language?</label>
+            <div style="display: flex; gap: 10px; margin-top: 10px;">
+                <label>
+                    <input type="radio" id="multilingualYes" name="multilingual" value="yes" style="margin-right: 5px;" required> Yes
+                </label>
+                <label>
+                    <input type="radio" id="multilingualNo" name="multilingual" value="no" style="margin-right: 5px;"> No
+                </label>
+            </div>
+        </div>
+
+        <!-- Education Level -->
+        <label>What is your education level?</label>
+        <div class="radio-group">
+            <div class="radio-option">
+                <input type="radio" id="noEducation" name="education" value="none" required>
+                <label for="noEducation">Did not complete high school.</label>
+            </div>
+            <div class="radio-option">
+                <input type="radio" id="secondary" name="education" value="secondary">
+                <label for="secondary">High school</label>
+            </div>
+            <div class="radio-option">
+                <input type="radio" id="vocation" name="education" value="vocation">
+                <label for="vocation">Vocational Training</label>
+            </div>
+            <div class="radio-option">
+                <input type="radio" id="university" name="education" value="university">
+                <label for="university">University Degree</label>
+            </div>
+            <div class="radio-option">
+                <input type="radio" id="graduate" name="education" value="graduate">
+                <label for="graduate">Graduate studies</label>
+            </div>
+        </div>
+
+        <!-- Employment Status -->
+        <div style="margin-top: 20px;">
+            <label for="employmentStatus" style="font-size: 18px; font-weight: bold; display: block; margin-bottom: 10px;">Are you employed?</label>
+            <select id="employmentStatus" name="employmentStatus" style="padding: 10px; width: 100%; max-width: 400px;">
+                <option value="">Select an option</option>
+                <option value="full-time">Full Time</option>
+                <option value="part-time">Part Time</option>
+                <option value="unemployed">Unemployed</option>
+                <option value="student">Student</option>
+            </select>
+        </div>
+
+        <!-- Months Worked -->
+        <label for="monthsWorked">How many of the last 12 months did you work in total?</label>
+        <select id="monthsWorked" name="months_worked" required>
+            <option value="">Select a number</option>
+            <!-- Generate options dynamically -->
+            <script>
+                for (let i = 1; i <= 12; i++) {
+                    document.write(`<option value="${i}">${i}</option>`);
+                }
+            </script>
+        </select>
+
+        <!-- Marital Status -->
+        <div style="margin-top: 20px;">
+            <label for="maritalStatus" style="font-size: 18px; font-weight: bold; display: block; margin-bottom: 10px;">What is your marital status?</label>
+            <select id="maritalStatus" name="maritalStatus" style="padding: 10px; width: 100%; max-width: 400px;">
+                <option value="">Select an option</option>
+                <option value="single">Single</option>
+                <option value="married">Married</option>
+                <option value="divorced">Divorced</option>
+                <option value="widowed">Widowed</option>
+                <option value="other">Other</option>
+            </select>
+        </div>
+
+        <label>What best describes the annual income of your entire household (in €)?</label>
+        <div class="radio-group">
+            <div class="radio-option">
+                <input type="radio" id="income1" name="income" value="under_20000" required>
+                <label for="income1">Less than 20,000</label>
+            </div>
+            <div class="radio-option">
+                <input type="radio" id="income2" name="income" value="20000_to_34999">
+                <label for="income2">20,000 - 34,999</label>
+            </div>
+            <div class="radio-option">
+                <input type="radio" id="income3" name="income" value="35000_to_49999">
+                <label for="income3">35,000 - 49,999</label>
+            </div>
+            <div class="radio-option">
+                <input type="radio" id="income4" name="income" value="50000_to_74999">
+                <label for="income4">50,000 - 74,999</label>
+            </div>
+            <div class="radio-option">
+                <input type="radio" id="income5" name="income" value="75000_to_99999">
+                <label for="income5">75,000 - 99,999</label>
+            </div>
+            <div class="radio-option">
+                <input type="radio" id="income6" name="income" value="100000_to_149999">
+                <label for="income6">100,000 - 149,999</label>
+            </div>
+            <div class="radio-option">
+                <input type="radio" id="income7" name="income" value="over_150000">
+                <label for="income7">More than 150,000</label>
+            </div>
+        </div>
+        
+
+        <!-- Mental Health -->
+        <div class="divider"></div>
+        <label>How do you rate your mental health?</label>
+        <div class="radio-group">
+            <div class="radio-option">
+                <input type="radio" id="mentalHealth1" name="mentalHealth" value="Terrific" required>
+                <label for="mentalHealth1">Terrific</label>
+            </div>
+            <div class="radio-option">
+                <input type="radio" id="mentalHealth2" name="mentalHealth" value="Very good">
+                <label for="mentalHealth2">Very good</label>
+            </div>
+            <div class="radio-option">
+                <input type="radio" id="mentalHealth3" name="mentalHealth" value="Good">
+                <label for="mentalHealth3">Good</label>
+            </div>
+            <div class="radio-option">
+                <input type="radio" id="mentalHealth4" name="mentalHealth" value="Satisfactory">
+                <label for="mentalHealth4">Satisfactory</label>
+            </div>
+            <div class="radio-option">
+                <input type="radio" id="mentalHealth5" name="mentalHealth" value="Bad">
+                <label for="mentalHealth5">Bad</label>
+            </div>
+            <div class="radio-option">
+                <input type="radio" id="mentalHealth6" name="mentalHealth" value="Very bad">
+                <label for="mentalHealth6">Very bad</label>
+            </div>
+            <div class="radio-option">
+                <input type="radio" id="mentalHealth7" name="mentalHealth" value="Horrible">
+                <label for="mentalHealth7">Horrible</label>
+            </div>
+        </div>
+
+        <!-- Mental Illness -->
+        <div style="margin-top: 20px;">
+            <label style="font-size: 18px; font-weight: bold; display: block; margin-bottom: 10px;">Do you have any mental illness or psychiatric disorder?</label>
+            <div style="display: flex; gap: 10px;">
+                <label>
+                    <input type="radio" name="mentalIllness" value="yes" onclick="toggleTreatmentQuestion(true)" style="margin-right: 5px;" required> Yes
+                </label>
+                <label>
+                    <input type="radio" name="mentalIllness" value="no" onclick="toggleTreatmentQuestion(false)" style="margin-right: 5px;"> No
+                </label>
+            </div>
+        </div>
+
+        <!-- Treatment Question -->
+        <div id="treatmentQuestion" style="margin-top: 20px; display: none;">
+            <label style="font-size: 18px; font-weight: bold; display: block; margin-bottom: 10px;">Are you currently receiving treatment for the above diagnoses?</label>
+            <div style="display: flex; gap: 10px; margin-top: 10px;">
+                <label>
+                    <input type="radio" id="treatmentYes" name="treatment" value="yes" onclick="toggleMedicationQuestions(true)" style="margin-right: 5px;" required> Yes
+                </label>
+                <label>
+                    <input type="radio" id="treatmentNo" name="treatment" value="no" onclick="toggleMedicationQuestions(false)" style="margin-right: 5px;"> No
+                </label>
+                <label>
+                    <input type="radio" id="treatmentNA" name="treatment" value="not applicable" onclick="toggleMedicationQuestions(false)" style="margin-right: 5px;"> Not Applicable
+                </label>
+            </div>
+        </div>
+
+        <!-- Medication Questions -->
+        <div id="medicationQuestions" style="margin-top: 20px; display: none;">
+            <!-- Antidepressants -->
+            <div style="margin-top: 20px;">
+                <label style="font-size: 18px; font-weight: bold; display: block; margin-bottom: 10px;">Are you treated with antidepressants?</label>
+                <div style="display: flex; gap: 10px;">
+                    <label>
+                        <input type="radio" name="antidepressants" value="yes" style="margin-right: 5px;"> Yes
+                    </label>
+                    <label>
+                        <input type="radio" name="antidepressants" value="no" style="margin-right: 5px;"> No
+                    </label>
+                </div>
+            </div>
+            <!-- Antipsychotics -->
+            <div style="margin-top: 20px;">
+                <label style="font-size: 18px; font-weight: bold; display: block; margin-bottom: 10px;">Are you treated with antipsychotics?</label>
+                <div style="display: flex; gap: 10px;">
+                    <label>
+                        <input type="radio" name="antipsychotics" value="yes" style="margin-right: 5px;"> Yes
+                    </label>
+                    <label>
+                        <input type="radio" name="antipsychotics" value="no" style="margin-right: 5px;"> No
+                    </label>
+                </div>
+            </div>
+            <!-- Anticonvulsants -->
+            <div style="margin-top: 20px;">
+                <label style="font-size: 18px; font-weight: bold; display: block; margin-bottom: 10px;">Are you treated with anticonvulsants?</label>
+                <div style="display: flex; gap: 10px;">
+                    <label>
+                        <input type="radio" name="anticonvulsants" value="yes" style="margin-right: 5px;"> Yes
+                    </label>
+                    <label>
+                        <input type="radio" name="anticonvulsants" value="no" style="margin-right: 5px;"> No
+                    </label>
+                </div>
+            </div>
+            <!-- Antianxiety -->
+            <div style="margin-top: 20px;">
+                <label style="font-size: 18px; font-weight: bold; display: block; margin-bottom: 10px;">Are you treated with antianxiety medication?</label>
+                <div style="display: flex; gap: 10px;">
+                    <label>
+                        <input type="radio" name="antianxiety" value="yes" style="margin-right: 5px;"> Yes
+                    </label>
+                    <label>
+                        <input type="radio" name="antianxiety" value="no" style="margin-right: 5px;"> No
+                    </label>
+                </div>
+            </div>
+        </div>
+
+        <!-- Family Mental Illness -->
+        <label>Do your biological parents or biological siblings have mental illnesses?</label>
+        <div class="radio-group">
+            <div class="radio-option">
+                <input type="radio" id="familyMentalIllnessYes" name="familyMentalIllness" value="yes" required>
+                <label for="familyMentalIllnessYes">Yes</label>
+            </div>
+            <div class="radio-option">
+                <input type="radio" id="familyMentalIllnessNo" name="familyMentalIllness" value="no">
+                <label for="familyMentalIllnessNo">No</label>
+            </div>
+        </div>
+
+        <!-- Family Schizophrenia and Bipolar -->
+        <div style="margin-top: 20px;">
+            <label style="font-size: 18px; font-weight: bold; display: block; margin-bottom: 10px;">Does anyone in your immediate family have a schizophrenia diagnosis?</label>
+            <div style="display: flex; gap: 10px;">
+                <label>
+                    <input type="radio" name="familySchizophrenia" value="yes" style="margin-right: 5px;" required> Yes
+                </label>
+                <label>
+                    <input type="radio" name="familySchizophrenia" value="no" style="margin-right: 5px;"> No
+                </label>
+            </div>
+
+            <label style="font-size: 18px; font-weight: bold; display: block; margin-top: 20px;">Does anyone in your immediate family have a bipolar diagnosis?</label>
+            <div style="display: flex; gap: 10px;">
+                <label>
+                    <input type="radio" name="familyBipolar" value="yes" style="margin-right: 5px;" required> Yes
+                </label>
+                <label>
+                    <input type="radio" name="familyBipolar" value="no" style="margin-right: 5px;"> No
+                </label>
+            </div>
+        </div>
+
+        <!-- Chronic Disease -->
+        <div style="margin-top: 20px;">
+            <label for="chronicCondition" style="font-size: 18px; font-weight: bold; display: block; margin-bottom: 10px;">
+                Do you have a chronic disease or long-term health condition/disability?
+            </label>
+            <div style="display: flex; gap: 10px; margin-top: 10px;">
+                <label>
+                    <input type="radio" required id="chronicConditionYes" name="chronicCondition" value="yes" onclick="toggleConditionInput(true)" style="margin-right: 5px;"> Yes
+                </label>
+                <label>
+                    <input type="radio" id="chronicConditionNo" name="chronicCondition" value="no" onclick="toggleConditionInput(false)" style="margin-right: 5px;"> No
+                </label>
+            </div>
+            <div id="conditionDetails" style="margin-top: 15px; display: none;">
+                <label for="conditionDescription" style="font-size: 16px; display: block; margin-bottom: 5px;">Please specify:</label>
+                <textarea id="conditionDescription" name="conditionDescription" style="width: 100%; max-width: 400px; padding: 10px;" placeholder="Describe your condition"></textarea>
+            </div>
+        </div>
+
+        <!-- Exercise Frequency -->
+        <div class="divider"></div>
+        <label for="exerciseFrequency">How often do you exercise?</label>
+        <select id="exerciseFrequency" name="exerciseFrequency" required>
+            <option value="">Select an option</option>
+            <option value="never">Never</option>
+            <option value="rarely">Rarely</option>
+            <option value="sometimes">Weekly</option>
+            <option value="often">Daily/Every other day</option>
+        </select>
+
+        <!-- Smoking Tobacco -->
+        <div style="margin-top: 20px;">
+            <label for="smokeTobacco" style="font-size: 18px; font-weight: bold; display: block; margin-bottom: 10px;">Do you smoke tobacco?</label>
+            <select id="smokeTobacco" name="smokeTobacco" style="width: 100%; max-width: 400px; padding: 10px;" onchange="toggleCigarettesPerDay(this.value === 'yes')" required>
+                <option value="">Select an option</option>
+                <option value="yes">Yes</option>
+                <option value="socially">Socially</option>
+                <option value="no">No</option>
+                <option value="former">Former Smoker</option>
+            </select>
+        </div>
+
+        <div id="cigarettesPerDay" style="margin-top: 15px; display: none;">
+            <label for="cigarettesCount" style="font-size: 16px; display: block; margin-bottom: 5px;">How many cigarettes do you smoke per day?</label>
+            <input type="number" id="cigarettesCount" name="cigarettesCount" style="width: 100%; max-width: 400px; padding: 10px;" placeholder="Enter number of cigarettes">
+        </div>
+
+        <!-- Alcohol Use -->
+        <label for="drinkFrequency">Do you drink alcohol?</label>
+        <select id="drinkFrequency" name="drinkFrequency" onchange="toggleAlcoholDetails(this.value)" required>
+            <option value="">Select an option</option>
+            <option value="never">I never drink alcohol.</option>
+            <option value="less-often">I rarely drink alcohol.</option>
+            <option value="often">I often drink alcohol.</option>
+            <option value="2-3-week">2 - 3x per week</option>
+            <option value="4-more-week">4x or more per week</option>
+        </select>
+
+        <!-- Alcohol Details -->
+        <div id="alcoholDetails" style="display: none;">
+            <!-- Typical Drinks -->
+            <label>When you drink alcohol, how many drinks do you typically consume at once?</label>
+            <p><small>1 drink corresponds to approx. 0.33 l beer, 1/8 l wine, or 2 cl brandy.</small></p>
+            <select id="glassesPerDay" name="glassesPerDay" required>
+                <option value="">Select an option</option>
+                <option value="1-2">1 - 2</option>
+                <option value="3-4">3 - 4</option>
+                <option value="5-6">5 - 6</option>
+                <option value="7-9">7 - 9</option>
+                <option value="10-more">10 or more</option>
+                <option value="never">I never drink alcohol</option>
+            </select>
+
+            <!-- Frequency of 6+ Drinks -->
+            <label>How often do you drink 6 or more glasses of alcohol on one occasion (e.g., at a dinner, party, or event)?</label>
+            <p><small>1 glass of alcohol corresponds to approx. 0.33 l beer, 1/8 l wine/sparkling wine, or 2 cl brandy.</small></p>
+            <select id="sixPlusFrequency" name="sixPlusFrequency" required>
+                <option value="">Select an option</option>
+                <option value="less-than-six-months">Less than once every six months</option>
+                <option value="once-every-six-months">Once every six months</option>
+                <option value="once-month">Once a month</option>
+                <option value="once-week">Once a week</option>
+                <option value="daily">Daily or almost daily</option>
+            </select>
+        </div>
+
+        <!-- Marijuana Use -->
+        <div>
+            <label for="marijuanaUse" style="font-size: 16px; font-weight: bold; display: block; margin-bottom: 10px;">Do you use marijuana?</label>
+            <select id="marijuanaUse" name="marijuanaUse" style="width: 100%; max-width: 400px; padding: 10px;" onchange="toggleMarijuanaDetails(this.value === 'yes')" required>
+                <option value="">Select an option</option>
+                <option value="yes">Yes</option>
+                <option value="no">No</option>
+            </select>
+        </div>
+        <div id="marijuanaDetails" style="display: none; margin-top: 20px;">
+            <label for="marijuanaFrequency" style="font-size: 16px; font-weight: bold; display: block; margin-bottom: 10px;">How frequently do you use marijuana?</label>
+            <select id="marijuanaFrequency" name="marijuanaFrequency" style="width: 100%; max-width: 400px; padding: 10px;">
+                <option value="">Select an option</option>
+                <option value="rarely">Rarely</option>
+                <option value="2-4-month">2 - 4x per month</option>
+                <option value="2-4-week">2 - 4x per week</option>
+                <option value="daily">Daily</option>
+                <option value="multiple-daily">Multiple times daily</option>
+            </select>
+            <label for="marijuanaStartAge" style="font-size: 16px; font-weight: bold; display: block; margin-top: 20px; margin-bottom: 10px;">At what age did you start using marijuana?</label>
+            <input type="number" id="marijuanaStartAge" name="marijuanaStartAge" style="width: 100%; max-width: 400px; padding: 10px;" placeholder="Enter the age you first tried marijuana">
+        </div>
+
+        <!-- Drug Use -->
+        <div>
+            <label for="useDrugs" style="font-size: 18px; font-weight: bold;">Do you use drugs?</label>
+            <select id="useDrugs" name="useDrugs" style="width: 100%; max-width: 400px; padding: 10px;" onchange="toggleDrugQuestions(this.value === 'yes')" required>
+                <option value="">Select an option</option>
+                <option value="yes">Yes</option>
+                <option value="no">No</option>
+            </select>
+        </div>
+
+        <!-- Drug Questions -->
+        <div id="drugQuestions" class="hidden" style="margin-top: 20px;">
+            <h2 style="font-size: 20px; font-weight: bold; margin-bottom: 20px;">How frequently do you use these substances?</h2>
+            <!-- Stimulants -->
+            <div style="margin-bottom: 20px; border-bottom: 1px solid #ddd; padding-bottom: 10px;">
+                <p style="font-size: 18px; font-weight: bold; margin-bottom: 5px;">Stimulants</p>
+                <p style="font-size: smaller; color: #555; margin-top: 0;">Cocaine, Amphetamines, MDMA/Ecstasy, etc</p>
+                <select id="stimulantsFrequency" name="stimulantsFrequency" style="margin-top: 10px; padding: 10px; width: 100%; max-width: 400px;">
+                    <option value="">Select an option</option>
+                    <option value="never">Never</option>
+                    <option value="over-six-months-ago">Over six months ago</option>
+                    <option value="multiple-times-per-month">Multiple times per month</option>
+                    <option value="multiple-times-per-week">Multiple times per week</option>
+                    <option value="daily">Daily</option>
+                </select>
+            </div>
+            <!-- Hallucinogens -->
+            <div style="margin-bottom: 20px; border-bottom: 1px solid #ddd; padding-bottom: 10px;">
+                <p style="font-size: 18px; font-weight: bold; margin-bottom: 5px;">Hallucinogens/Psychedelics</p>
+                <p style="font-size: smaller; color: #555; margin-top: 0;">Psilocybin, LSD, DMT</p>
+                <select id="hallucinogensFrequency" name="hallucinogensFrequency" style="margin-top: 10px; padding: 10px; width: 100%; max-width: 400px;">
+                    <option value="">Select an option</option>
+                    <option value="never">Never</option>
+                    <option value="over-six-months-ago">Over six months ago</option>
+                    <option value="multiple-times-per-month">Multiple times per month</option>
+                    <option value="multiple-times-per-week">Multiple times per week</option>
+                    <option value="daily">Daily</option>
+                </select>
+            </div>
+            <!-- Opiates -->
+            <div style="margin-bottom: 20px; border-bottom: 1px solid #ddd; padding-bottom: 10px;">
+                <p style="font-size: 18px; font-weight: bold; margin-bottom: 5px;">Opiates/Opioids</p>
+                <p style="font-size: smaller; color: #555; margin-top: 0;">Heroin, Morphine, Pharmaceuticals (e.g., Hydrocodone, Oxycodone, Codeine)</p>
+                <select id="opiatesFrequency" name="opiatesFrequency" style="margin-top: 10px; padding: 10px; width: 100%; max-width: 400px;">
+                    <option value="">Select an option</option>
+                    <option value="never">Never</option>
+                    <option value="over-six-months-ago">Over six months ago</option>
+                    <option value="multiple-times-per-month">Multiple times per month</option>
+                    <option value="multiple-times-per-week">Multiple times per week</option>
+                    <option value="daily">Daily</option>
+                </select>
+            </div>
+            <!-- Sedatives -->
+            <div style="margin-bottom: 20px; border-bottom: 1px solid #ddd; padding-bottom: 10px;">
+                <p style="font-size: 18px; font-weight: bold; margin-bottom: 5px;">Sedatives</p>
+                <p style="font-size: smaller; color: #555; margin-top: 0;">Benzodiazepines (e.g., Xanax, Valium, Klonopin), Barbiturates (e.g., Phenobarbital), Hypnotics (e.g., Ambien/Zolpidem)</p>
+                <select id="sedativesFrequency" name="sedativesFrequency" style="margin-top: 10px; padding: 10px; width: 100%; max-width: 400px;">
+                    <option value="">Select an option</option>
+                    <option value="never">Never</option>
+                    <option value="over-six-months-ago">Over six months ago</option>
+                    <option value="multiple-times-per-month">Multiple times per month</option>
+                    <option value="multiple-times-per-week">Multiple times per week</option>
+                    <option value="daily">Daily</option>
+                </select>
+            </div>
+            <!-- Dissociatives -->
+            <div style="margin-bottom: 20px; padding-bottom: 10px;">
+                <p style="font-size: 18px; font-weight: bold; margin-bottom: 5px;">Dissociatives</p>
+                <p style="font-size: smaller; color: #555; margin-top: 0;">Nitrous Oxide, Ketamine, PCP</p>
+                <select id="dissociativesFrequency" name="dissociativesFrequency" style="margin-top: 10px; padding: 10px; width: 100%; max-width: 400px;">
+                    <option value="">Select an option</option>
+                    <option value="never">Never</option>
+                    <option value="over-six-months-ago">Over six months ago</option>
+                    <option value="multiple-times-per-month">Multiple times per month</option>
+                    <option value="multiple-times-per-week">Multiple times per week</option>
+                    <option value="daily">Daily</option>
+                </select>
+            </div>
+        </div>
+        <div>
+            <button id="submitButton" type="button" class="btn" disabled onclick="submitSurvey()">Submit</button>        
+        </div>
+    </form>
+    <script src="jatos.js"></script>
+    <script src="prolificLinks.js"></script>
+    <script src="inactivity.js"></script>
+    <script>
+
+    let participantID = null;
+            jatos.onLoad(() => {
+                console.log("Session Data:", jatos.sessionData);
+                participantID = jatos.studySessionData?.participantID || 'test';
+                if (participantID !== 'test') {
+                    console.log("Participant ID from session data:", participantID);
+                } else {
+                    console.warn("Session data or Participant ID is not set. Using fallback ID:", participantID);
+                }
+            });
+        let startTime = performance.now();
+
+        function toggleOtherLanguageInput(select) {
+            const otherLanguageField = document.getElementById('otherLanguageField');
+            if (select.value === 'other') {
+                otherLanguageField.classList.remove('hidden');
+            } else {
+                otherLanguageField.classList.add('hidden');
+                document.getElementById('otherLanguage').value = '';
+            }
+        }
+
+        function toggleColorblindType(show) {
+            const colorblindTypeField = document.getElementById('colorblindTypeField');
+            if (show) {
+                colorblindTypeField.classList.remove('hidden');
+            } else {
+                colorblindTypeField.classList.add('hidden');
+                document.getElementById('colorblindType').value = '';
+            }
+        }
+
+        function toggleTreatmentQuestion(show) {
+            const treatmentDiv = document.getElementById('treatmentQuestion');
+            if (show) {
+                treatmentDiv.style.display = 'block';
+            } else {
+                treatmentDiv.style.display = 'none';
+                toggleMedicationQuestions(false);
+                document.querySelectorAll('#treatmentQuestion input[type="radio"]').forEach(input => {
+                    input.checked = false;
+                });
+            }
+        }
+
+        function toggleMedicationQuestions(show) {
+            const medicationDiv = document.getElementById('medicationQuestions');
+            if (show) {
+                medicationDiv.style.display = 'block';
+            } else {
+                medicationDiv.style.display = 'none';
+                document.querySelectorAll('#medicationQuestions input[type="radio"]').forEach(input => {
+                    input.checked = false;
+                });
+            }
+        }
+
+        function toggleCigarettesPerDay(show) {
+            const cigarettesDiv = document.getElementById('cigarettesPerDay');
+            if (show) {
+                cigarettesDiv.style.display = 'block';
+            } else {
+                cigarettesDiv.style.display = 'none';
+                document.getElementById('cigarettesCount').value = ''; 
+            }
+        }
+
+        function toggleAlcoholDetails(value) {
+            const alcoholDetails = document.getElementById('alcoholDetails');
+            const glassesPerDay = document.getElementById('glassesPerDay');
+            const sixPlusFrequency = document.getElementById('sixPlusFrequency');
+
+            if (value !== 'never' && value !== '') {
+                alcoholDetails.style.display = 'block';
+                glassesPerDay.required = true;
+                sixPlusFrequency.required = true;
+            } else {
+                alcoholDetails.style.display = 'none';
+                glassesPerDay.value = '';
+                glassesPerDay.required = false;
+                sixPlusFrequency.value = '';
+                sixPlusFrequency.required = false;
+            }
+        }
+
+        function toggleMarijuanaDetails(show) {
+            const marijuanaDetails = document.getElementById('marijuanaDetails');
+            if (show) {
+                marijuanaDetails.style.display = 'block';
+            } else {
+                marijuanaDetails.style.display = 'none';
+                document.getElementById('marijuanaFrequency').value = '';
+                document.getElementById('marijuanaStartAge').value = '';
+            }
+        }
+
+        function toggleDrugQuestions(show) {
+            const drugQuestions = document.getElementById('drugQuestions');
+            if (show) {
+                drugQuestions.classList.remove('hidden');
+            } else {
+                drugQuestions.classList.add('hidden');
+                document.querySelectorAll('#drugQuestions select').forEach(select => select.value = '');
+            }
+        }
+
+        function toggleConditionInput(show) {
+            const conditionDetails = document.getElementById('conditionDetails');
+            if (show) {
+                conditionDetails.style.display = 'block';
+            } else {
+                conditionDetails.style.display = 'none';
+                document.getElementById('conditionDescription').value = ''; 
+            }
+        }
+
+        function submitSurvey() {
+            const form = document.getElementById('surveyForm');
+            const formData = new FormData(form);
+            const surveyData = {};
+            surveyData['participant_id'] = participantID
+            const endTime = performance.now();
+            const timeTaken = (endTime - startTime) / 1000;
+
+            // Helper function to convert keys to snake_case
+            function toSnakeCase(key) {
+                return key
+                    .replace(/([a-z])([A-Z])/g, '$1_$2') // Convert camelCase to snake_case
+                    .replace(/-/g, '_')                  // Convert kebab-case to snake_case
+                    .toLowerCase();                      // Convert everything to lowercase
+            }
+
+            // Helper function to clean and normalize values
+            function normalizeValue(value) {
+                return value
+                    .replace(/\s+/g, '_') // Replace spaces with underscores
+                    .replace(/-/g, '_')   // Replace dashes with underscores
+                    .toLowerCase();       // Ensure everything is lowercase
+            }
+
+            // Process form data
+            formData.forEach((value, key) => {
+                const snakeCaseKey = toSnakeCase(key);
+                surveyData[snakeCaseKey] = value ? normalizeValue(value) : ""; // Normalize value or set empty string
+            });
+
+            // Add additional timing data
+            surveyData["demo_time"] = timeTaken;
+
+            console.log('Survey data:', JSON.stringify(surveyData));
+
+            // Submit to JATOS
+            jatos.submitResultData(JSON.stringify(surveyData))
+                .then(() => jatos.startNextComponent())
+                .catch((error) => {
+                    console.error('Submission error:', error);
+                    alert('There was an error submitting your data. Please try again.');
+                });
+        }
+
+        function validateForm() {
+            const form = document.getElementById('surveyForm');
+            const fields = form.querySelectorAll('input:required, select:required, textarea:required');
+            let allValid = true;
+
+            // Check all visible required fields
+            fields.forEach((field) => {
+                if (!field.closest('.hidden') && !field.closest('[style*="display: none"]')) { // Skip hidden fields
+                    if (!field.value || (field.type === 'radio' && !isRadioGroupChecked(field.name))) {
+                        allValid = false;
+                    }
+                }
+            });
+
+            // Enable or disable the Submit button
+            const submitButton = document.getElementById('submitButton');
+            submitButton.disabled = !allValid;
+        }
+
+        // Helper function to check if a radio group has a selected value
+        function isRadioGroupChecked(name) {
+            const radios = document.querySelectorAll(`input[name="${name}"]`);
+            return Array.from(radios).some(radio => radio.checked);
+        }
+
+        // Attach validation to user input
+        document.getElementById('surveyForm').addEventListener('input', validateForm);
+
+    </script>
+</body>
+</html>

@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Prolific ID Entry</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f9;
+            color: #333;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+        .container {
+            text-align: center;
+            background: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+            max-width: 400px;
+            width: 100%;
+        }
+        h1 {
+            font-size: 24px;
+            color: #2c3e50;
+        }
+        label {
+            font-size: 16px;
+            display: block;
+            margin-bottom: 10px;
+        }
+        input {
+            width: calc(100% - 20px);
+            padding: 10px;
+            margin-bottom: 20px;
+            font-size: 16px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+        input:focus {
+            border-color: #34495e;
+            outline: none;
+        }
+        .btn {
+            background-color: #34495e;
+            color: white;
+            padding: 10px 30px;
+            border: none;
+            border-radius: 5px;
+            font-size: 18px;
+            cursor: not-allowed;
+            opacity: 0.5;
+        }
+        .btn.enabled {
+            cursor: pointer;
+            opacity: 1;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Welcome</h1>
+        <form id="prolificForm">
+            <label for="prolificIDInput1">Please paste your Prolific ID here:</label>
+            <input type="text" id="prolificIDInput1" placeholder="Enter your Prolific ID" required>
+            
+            <label for="prolificIDInput2">Confirm your Prolific ID:</label>
+            <input type="text" id="prolificIDInput2" placeholder="Confirm your Prolific ID" required>
+            
+            <button type="button" id="nextButton" class="btn" disabled>Next</button>
+        </form>
+    </div>
+    <script src="jatos.js"></script>
+    <script src="prolificLinks.js"></script>
+    <script src="introInactivity.js"></script>
+    <script>
+        const startTime = new Date().toISOString();
+        const prolificInput1 = document.getElementById('prolificIDInput1');
+        const prolificInput2 = document.getElementById('prolificIDInput2');
+        const nextButton = document.getElementById('nextButton');
+
+        // Validate the inputs and enable the Next button if they match
+        function validateInputs() {
+            const id1 = prolificInput1.value.trim();
+            const id2 = prolificInput2.value.trim();
+
+            if (id1 && id2 && id1 === id2) {
+                nextButton.classList.add('enabled');
+                nextButton.disabled = false;
+            } else {
+                nextButton.classList.remove('enabled');
+                nextButton.disabled = true;
+            }
+        }
+
+        // Add event listeners to validate inputs on change
+        prolificInput1.addEventListener('input', validateInputs);
+        prolificInput2.addEventListener('input', validateInputs);
+
+        // Submit the result and navigate to the next component
+        nextButton.addEventListener('click', function () {
+            const prolificID = prolificInput1.value.trim();
+            const timestamp = new Date().toISOString();
+            jatos.studySessionData.prolificID = prolificID;
+            const resultData = {
+                prolific_id: prolificID,
+                timestamp_start: startTime,
+                timestamp_end: new Date().toISOString()
+            };
+
+            // Submit the data and move to the next component
+            jatos.submitResultData(JSON.stringify(resultData), function () {
+                jatos.startNextComponent();
+            }, function (error) {
+                console.error('Data submission failed:', error);
+                alert('There was an error submitting your data. Please try again.');
+            });
+        });
+    </script>
+</body>
+</html>
