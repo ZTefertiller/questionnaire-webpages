@@ -14,23 +14,28 @@
             padding: 20px;
             background-color: #f0f8ff;
         }
+        @font-face {
+            font-family: 'OpenDyslexic';
+            src: url('../fonts/OpenDyslexic-Regular.woff2') format('woff2'),
+                url('../fonts/OpenDyslexic-Regular.woff') format('woff'),
+                url('../fonts/OpenDyslexic-Regular.otf') format('opentype');
+            font-weight: 400; /* normal weight */
+            font-style: normal;
+        }
         h1 {
+            font-family: "OpenDyslexic", Arial, sans-serif;
             text-align: center;
             color: #2c3e50;
             font-size: 28px;
         }
         label {
+            font-family: "OpenDyslexic", Arial, sans-serif;
             display: block;
             margin-top: 15px;
             font-weight: bold;
         }
-        #abortButton {
-            position: fixed;
-            top: 10px;
-            right: 10px;
-            z-index: 1000;
-        }
         input, select {
+            font-family: "OpenDyslexic", Arial, sans-serif;
             margin-top: 5px;
             padding: 10px;
             font-size: 16px;
@@ -64,6 +69,7 @@
             border-bottom: 2px solid #ccc;
         }
         .btn {
+            font-family: "OpenDyslexic", Arial, sans-serif;
             padding: 15px 40px;
             border: none;
             border-radius: 5px;
@@ -88,6 +94,7 @@
             margin-bottom: 5px;
         }
         #abortButton {
+            font-family: "OpenDyslexic", Arial, sans-serif;
             position: fixed;
             top: 10px;
             right: 10px;
@@ -99,6 +106,7 @@
             border-radius: 5px;
             cursor: pointer;
         }
+
         #abortButton:hover {
             background-color: #c82333;
         }
@@ -638,8 +646,8 @@
         </div>
     </form>
     <script src="jatos.js"></script>
-    <script src="prolificLinks.js"></script>
-    <script src="inactivity.js"></script>
+    <script src="../prolific_consent/prolificLinks.js"></script>
+    <script src="../inactivity.js"></script>
     <script>
 
     let participantID = null;

@@ -6,7 +6,7 @@
     <title>Prolific ID Entry</title>
     <style>
         body {
-            font-family: Arial, sans-serif;
+            font-family: 'OpenDyslexic';
             background-color: #f4f4f9;
             color: #333;
             display: flex;
@@ -14,6 +14,14 @@
             align-items: center;
             height: 100vh;
             margin: 0;
+        }
+        @font-face {
+            font-family: 'OpenDyslexic';
+            src: url('../fonts/OpenDyslexic-Regular.woff2') format('woff2'),
+                url('../fonts/OpenDyslexic-Regular.woff') format('woff'),
+                url('../fonts/OpenDyslexic-Regular.otf') format('opentype');
+            font-weight: 400; /* normal weight */
+            font-style: normal;
         }
         .container {
             text-align: center;
@@ -25,10 +33,12 @@
             width: 100%;
         }
         h1 {
+            font-family: 'OpenDyslexic';
             font-size: 24px;
             color: #2c3e50;
         }
         label {
+            font-family: 'OpenDyslexic';
             font-size: 16px;
             display: block;
             margin-bottom: 10px;
@@ -46,6 +56,7 @@
             outline: none;
         }
         .btn {
+            font-family: 'OpenDyslexic';
             background-color: #34495e;
             color: white;
             padding: 10px 30px;
@@ -75,8 +86,8 @@
         </form>
     </div>
     <script src="jatos.js"></script>
-    <script src="prolificLinks.js"></script>
-    <script src="introInactivity.js"></script>
+    <script src="../prolific_consent/prolificLinks.js"></script>
+    <script src="../inactivity.js"></script>
     <script>
         const startTime = new Date().toISOString();
         const prolificInput1 = document.getElementById('prolificIDInput1');

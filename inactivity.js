@@ -3,7 +3,7 @@
     // (Edit these values to your preference)
     var inactivityWarningTime   = 30;    // Seconds before showing warning
     var inactivityCountdownTime = 30;    // Seconds to wait on warning
-    var inactivityUrl           = inactivityLink; 
+    var inactivityUrl           = window.inactivityLink; 
                                         // The redirect URL when countdown ends
     
     // === Internal variables ===

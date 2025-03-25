@@ -8,7 +8,7 @@ let studyCompletedLink = 'https://franziskaknolle.com'
 function abortStudy() {
     if (confirm("Are you sure you want to abort the study? You will be redirected and forfeit your task earnings.")) {
         studyInProgress = false;
-        jatos.endStudyAndRedirect(abortStudyLink);
+        jatos.endStudyAndRedirect(window.abortStudyLink);
     }
 }
 window.studyCompletedLink = studyCompletedLink;

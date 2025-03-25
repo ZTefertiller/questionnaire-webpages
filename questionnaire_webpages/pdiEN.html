@@ -14,12 +14,22 @@
             padding: 15px;
             background-color: #f0f8ff;
         }
+        @font-face {
+            font-family: 'OpenDyslexic';
+            src: url('../fonts/OpenDyslexic-Regular.woff2') format('woff2'),
+                url('../fonts/OpenDyslexic-Regular.woff') format('woff'),
+                url('../fonts/OpenDyslexic-Regular.otf') format('opentype');
+            font-weight: 400; /* normal weight */
+            font-style: normal;
+        }
         h1 {
+            font-family: "OpenDyslexic", Arial, sans-serif;
             text-align: center;
             color: #2c3e50;
             font-size: 26px;
         }
         h2 {
+            font-family: "OpenDyslexic", Arial, sans-serif;
             font-size: 22px;
         }
         .page {
@@ -43,13 +53,8 @@
             gap: 15px;
             margin-bottom: 15px;
         }
-        #abortButton {
-            position: fixed;
-            top: 10px;
-            right: 10px;
-            z-index: 1000; 
-        }
         .btn {
+            font-family: "OpenDyslexic", Arial, sans-serif;
             padding: 10px 30px;
             border: none;
             border-radius: 5px;
@@ -123,6 +128,7 @@
             margin-top: 15px;
         }
         .instruction {
+            font-family: "OpenDyslexic", Arial, sans-serif;
             font-weight: bold;
             color: red;
             font-size: 18px;
@@ -150,6 +156,7 @@
         }
         /* Large bold time estimate */
         .time-estimate {
+            font-family: "OpenDyslexic", Arial, sans-serif;
             font-size: 20px;
             font-weight: bold;
             color: #2c3e50;
@@ -207,8 +214,8 @@
     </div>
     <div id="questionnaire-container"></div>
     <script src="jatos.js"></script>
-    <script src="prolificLinks.js"></script>
-    <script src="inactivity.js"></script>
+    <script src="../prolific_consent/prolificLinks.js"></script>
+    <script src="../inactivity.js"></script>
     <script>
         // a bit lazier here, but this is really just the capsEN.html page but reskinned for PDI questions and scales. if you want slightly more comments
         // then check out that script on the same github -z 

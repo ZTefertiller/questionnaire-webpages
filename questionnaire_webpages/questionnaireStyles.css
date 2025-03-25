@@ -7,6 +7,15 @@ body {
     padding: 20px;
 }
 
+@font-face {
+    font-family: 'OpenDyslexic';
+    src: url('../fonts/OpenDyslexic-Regular.woff2') format('woff2'),
+        url('../fonts/OpenDyslexic-Regular.woff') format('woff'),
+        url('../fonts/OpenDyslexic-Regular.otf') format('opentype');
+    font-weight: 400; /* normal weight */
+    font-style: normal;
+}
+
 .container {
     max-width: 600px;
     margin: auto;
@@ -23,16 +32,21 @@ h1 {
 }
 
 #abortButton {
+    font-family: "OpenDyslexic", Arial, sans-serif;
     position: fixed;
     top: 10px;
     right: 10px;
-    z-index: 1000;
+    z-index: 1000; 
     padding: 10px 15px;
     background-color: #dc3545;
     color: white;
     border: none;
     border-radius: 5px;
     cursor: pointer;
+}
+
+#abortButton:hover {
+    background-color: #c82333;
 }
 
 .page {

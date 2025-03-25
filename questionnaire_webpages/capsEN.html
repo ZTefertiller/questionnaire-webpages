@@ -4,8 +4,6 @@
     <meta charset="UTF-8">
     <title>Life Experiences Questionnaire</title>
     <style>
-        /* [Your existing CSS remains unchanged] */
-
         body {
             font-family: "OpenDyslexic", Arial, sans-serif;
             font-size: 16px;
@@ -17,13 +15,24 @@
             background-color: #f0f8ff;
         }
 
+        @font-face {
+            font-family: 'OpenDyslexic';
+            src: url('../fonts/OpenDyslexic-Regular.woff2') format('woff2'),
+                url('../fonts/OpenDyslexic-Regular.woff') format('woff'),
+                url('../fonts/OpenDyslexic-Regular.otf') format('opentype');
+            font-weight: 400; /* normal weight */
+            font-style: normal;
+        }
+
         h1 {
+            font-family: "OpenDyslexic", Arial, sans-serif;
             text-align: center;
             color: #2c3e50;
             font-size: 26px;
         }
 
         h2 {
+            font-family: "OpenDyslexic", Arial, sans-serif;
             font-size: 22px;
         }
 
@@ -52,14 +61,8 @@
             margin-bottom: 15px;
         }
 
-        #abortButton {
-            position: fixed;
-            top: 10px;
-            right: 10px;
-            z-index: 1000; 
-        }
-
         .btn {
+            font-family: "OpenDyslexic", Arial, sans-serif;
             padding: 10px 30px;
             border: none;
             border-radius: 5px;
@@ -129,7 +132,7 @@
         }
 
         .scale-option.highlight {
-            background-color: #ffcccc; /* Light red background */
+            background-color: #ffcccc; 
             border: 2px solid red;
         }
 
@@ -174,7 +177,7 @@
             color: #2980b9;
             text-decoration: underline;
         }
-        /* Large bold time estimate */
+
         .time-estimate {
             font-size: 20px;
             font-weight: bold;
@@ -183,6 +186,7 @@
             text-align: center;
         }
         #abortButton {
+            font-family: "OpenDyslexic", Arial, sans-serif;
             position: fixed;
             top: 10px;
             right: 10px;
@@ -194,9 +198,12 @@
             border-radius: 5px;
             cursor: pointer;
         }
+
         #abortButton:hover {
             background-color: #c82333;
         }
+
+
     </style>
 </head>
 <body>
@@ -240,8 +247,8 @@
     <div id="questionnaire-container"></div>
 
     <script src="jatos.js"></script>
-    <script src="prolificLinks.js"></script>
-    <script src="inactivity.js"></script>
+    <script src="../prolific_consent/prolificLinks.js"></script>
+    <script src="../inactivity.js"></script>
     <script>
 
         let participantID = null;

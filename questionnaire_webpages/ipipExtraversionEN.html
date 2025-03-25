@@ -33,12 +33,6 @@
             margin-top: 20px;
             border-collapse: collapse;
         }
-        #abortButton {
-            position: fixed;
-            top: 10px;
-            right: 10px;
-            z-index: 1000;
-        }
         th, td {
             padding: 12px;
             text-align: center;
@@ -69,6 +63,7 @@
             margin-top: 20px;
         }
         .submit-btn {
+            font-family: 'Opendyslexic', Arial, sans-serif;
             font-size: 18px;
             padding: 10px 20px;
             background-color: #ccc;
@@ -79,21 +74,6 @@
         }
         .submit-btn:hover {
             background-color: #999;
-        }
-        #abortButton {
-            position: fixed;
-            top: 10px;
-            right: 10px;
-            z-index: 1000; 
-            padding: 10px 15px;
-            background-color: #dc3545;
-            color: white;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-        }
-        #abortButton:hover {
-            background-color: #c82333;
         }
     </style>
 </head>
@@ -140,7 +120,6 @@
                     <td><input type="radio" name="q4" value="3"></td>
                     <td><input type="radio" name="q4" value="4"></td>
                 </tr>
-                <!-- Attention Check Question -->
                 <tr>
                     <td>5. Please select 'Agree' for this question.</td>
                     <td><input type="radio" name="q5" value="1"></td>
@@ -194,13 +173,12 @@
 
             <div class="button-container">
                 <button type="button" class="submit-btn" onclick="submitData()">Submit</button>
-                <!-- Removed Abort button from here -->
             </div>
         </form>
     </div>
     <script src="jatos.js"></script>
-    <script src="prolificLinks.js"></script>
-    <script src="inactivity.js"></script>
+    <script src="../prolific_consent/prolificLinks.js"></script>
+    <script src="../inactivity.js"></script>
     <script>
         let participantID = null;
             jatos.onLoad(() => {
