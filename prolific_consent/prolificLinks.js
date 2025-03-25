@@ -14,6 +14,7 @@ function abortStudy() {
 window.studyCompletedLink = studyCompletedLink;
 window.noConsentLink = noConsentLink
 window.inactivityLink = inactivityLink
+window.abortStudyLink = abortStudyLink
 
 document.addEventListener("DOMContentLoaded", function() {
     const noConsentAnchor = document.getElementById("noConsentLink");
