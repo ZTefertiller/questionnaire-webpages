@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Perception Inventory</title>
+    <link rel="stylesheet" href="../questionnaires/questionnaire_webpages/questionnaireStyles.css">
+    <style>
+        /* Disabled button styling */
+        .btn:disabled {
+            background-color: #CCCCCC;
+            color: #666666;
+            cursor: not-allowed;
+            opacity: 0.7;
+        }
+    </style>    
+</head>
+<button id="abortButton" onclick="abortStudy()">Abort Study</button>
+<body>
+    <div class="container">
+        <h1>Perception Inventory</h1>
+        <div id="questionnaire-container"></div>
+    </div>
+    <script src="jatos.js"></script>
+    <script src="../questionnaires/prolific_consent/prolificLinks.js"></script>
+    <script src="../questionnaires/inactivity.js"></script>
+    <script>
+        let participantID = null;
+        jatos.onLoad(() => {
+        participantID = jatos.studySessionData?.participantID || 'test';
+        });
+
+        const startTime = performance.now();
+        let answers = {};
+
+        // SPQ Questions
+        const questions = [
+        { id: 1, text: 'Do you sometimes feel that things you see on TV or read have a special meaning for you?', factor: 'ideas' },
+        { id: 2, text: 'I sometimes avoid going to places where there will be many people because I will get anxious.', factor: 'social' },
+        { id: 3, text: 'Have you had experiences with the supernatural?', factor: 'magic'},
+        { id: 4, text: 'Have you often mistaken objects or shadows for people, or noises for voices?', factor: 'perception'},
+        { id: 5, text: 'Other people see me as slightly eccentric (odd).', factor: 'behavior'},
+        { id: 6, text: 'I have little interest in getting to know other people.', factor: 'friends'},
+        { id: 7, text: 'People sometimes find it hard to understand what I am saying.', factor: 'speech'},
+        { id: 8, text: 'People sometimes find me aloof and distant.', factor: 'affect'},
+        { id: 9, text: 'I am sure I am being talked about behind my back.', factor: 'suspicion'},
+        { id: 10, text: 'I am aware that people notice me when I go out for a meal or to see a film.', factor: 'ideas'},
+        { id: 11, text: 'I get very nervous when I have to make polite conversation.', factor: 'social'},
+        { id: 12, text: 'Do you believe in telepathy (mind-reading)?', factor: 'magic'},
+        { id: 13, text: 'Have you ever had the sense that some person or force is around you, even though you cannot see anyone?', factor: 'perception'},
+        { id: 14, text: 'People sometimes comment on my unusual mannerisms and habits.', factor: 'behavior'},
+        { id: 15, text: 'I prefer to keep myself to myself.', factor: 'friends'},
+        { id: 16, text: 'I sometimes jump quickly from one topic to another when speaking.', factor: 'speech'},
+        { id: 17, text: 'I am not good at expressing my true feelings by the way I talk and look.', factor: 'affect'},
+        { id: 18, text: 'Do you often feel that other people have it in for you?', factor: 'suspicion'},
+        { id: 19, text: 'Do some people drop hints about you or say things with a double-meaning?', factor: 'ideas'},
+        { id: 20, text: 'Do you ever get nervous when someone is walking behind you?', factor: 'social'},
+        { id: 21, text: 'Are you sometimes sure that other people can tell what you are thinking?', factor: 'magic'},
+        { id: 22, text: 'When you look at a person, or yourself in a mirror, have you ever seen the face change right before your eyes?', factor: 'perception'},
+        { id: 23, text: 'Sometimes other people think that I am a little strange.', factor: 'behavior'},
+        { id: 24, text: 'I am mostly quiet when with other people.', factor: 'friends'},
+        { id: 25, text: 'I sometimes forget what I am trying to say.', factor: 'speech'},
+        { id: 26, text: 'I rarely laugh and smile.', factor: 'affect'},
+        { id: 27, text: 'Do you sometimes get concerned that friends or coworkers are not really loyal or trustworthy?', factor: 'suspicion'},
+        { id: 28, text: 'Have you ever noticed a common event or object that seemed to be a special sign for you?', factor: 'ideas'},
+        { id: 29, text: 'I get anxious when meeting people for the first time.', factor: 'social'},
+        { id: 30, text: 'Do you believe in clairvoyancy (psychic forces, fortune telling)?', factor: 'magic'},
+        { id: 31, text: 'I often hear a voice speaking my thoughts aloud.', factor: 'perception'},
+        { id: 32, text: 'Some people think that I am a very bizarre person.', factor: 'behavior'},
+        { id: 33, text: 'I find it hard to be emotionally close to other people.', factor: 'friends'},
+        { id: 34, text: 'I often ramble on too much when speaking.', factor: 'speech'},
+        { id: 35, text: 'My "nonverbal" communication (smiling and nodding durring a conversation) is not very good.', factor: 'affect'},
+        { id: 36, text: 'I feel I have to be on my guard even with friends.', factor: 'suspicion'},
+        { id: 37, text: 'Do you sometimes see special meanings in advertisements, shop windows, or in the way things are arranged around you?', factor: 'ideas'},
+        { id: 38, text: 'Do you often feel nervous when you are in a group of unfamiliar people?', factor: 'social'},
+        { id: 39, text: 'Can other people feel your feelings when they are not there?', factor: 'magic'},
+        { id: 40, text: 'Have you ever seen things invisible to other people?', factor: 'perception'},
+        { id: 41, text: 'Do you feel that there is no one you are really close to outside of your immediate family, or people you can confide in or talk to about personal problems?', factor: 'friends'},
+        { id: 42, text: 'Some people find me a bit vague and elusive during a conversation.', factor: 'speech'},
+        { id: 43, text: 'I am poor at returning social courtesies and gestures.', factor: 'affect'},
+        { id: 44, text: 'Do you often pick up hidden threats or put-downs from what people say or do?', factor: 'suspicion'},
+        { id: 45, text: 'When shopping do you get the feeling that other people are taking notice of you?', factor: 'ideas'},
+        { id: 46, text: 'I feel very uncomfortable in social situations involving unfamiliar people.', factor: 'social'},
+        { id: 47, text: 'Have you had experiences with astrology, seeing the future, UFOs, ESP, or a sixth sense?', factor: 'magic'},
+        { id: 48, text: 'Do everyday things seem unusually large or small?', factor: 'perception'},
+        { id: 49, text: 'Writing letters to friends is more trouble than it is worth.', factor: 'friends'},
+        { id: 50, text: 'I sometimes use words in unusual ways.', factor: 'speech'},
+        { id: 51, text: 'I tend to avoid eye contact when conversing with others.', factor: 'affect'},
+        { id: 52, text: 'Have you found that it is best not to let other people know too much about you?', factor: 'suspicion'},
+        { id: 53, text: 'When you see people talking to each otehr, do you often wonder if they are talking about you?', factor: 'ideas'},
+        { id: 54, text: 'I would feel very anxious if I had to give a speech in front of a large group of people.', factor: 'social'},
+        { id: 55, text: 'Have you ever felt that you are communication with another person telepathically (by mind-reading)?', factor: 'magic'},
+        { id: 56, text: 'Does your sense of smell sometimes become unusually strong?', factor: 'perception'},
+        { id: 57, text: 'I tend to keep in the background on social occasions.', factor: 'friends'},
+        { id: 58, text: 'Do you tend to wander off the topic when having a conversation?', factor: 'speech'},
+        { id: 59, text: 'I often feel that others have it in for me.', factor: 'suspicion'},
+        { id: 60, text: 'Do you sometimes feel that other people are watching you?', factor: 'ideas'},
+        { id: 61, text: 'Do you ever suddenly feel distracted by ditant sounds that you are not normally aware of?', factor: 'perception'},
+        { id: 62, text: 'I attach little importance to having close friends.', factor: 'friends'},
+        { id: 63, text: 'Do you sometimes feel that people are talking about you?', factor: 'ideas'},
+        { id: 64, text: 'Are your thoughts sometimes so strong that you can almost hear them?', factor: 'perception'},
+        { id: 65, text: 'Do you often have to keep an eye out to stop people from taking advantage of you?', factor: 'suspicion'},
+        { id: 66, text: 'Do you feel that you cannot get "close" to people?', factor: 'friends'},
+        { id: 67, text: 'I am an odd, unusual person.', factor: 'behavior'},
+        { id: 68, text: 'I do not have an expressive and lively way of speaking,', factor: 'affect'},
+        { id: 69, text: 'I find it hard to communicate clearly what I want to say to people.', factor: 'speech'},
+        { id: 70, text: 'I have some eccentric (odd) habits.', factor: 'behavior'},
+        { id: 71, text: 'I feel very uneasy talking to people I do not know well.', factor: 'social'},
+        { id: 72, text: 'People occasionally comment that my conversation is confusing.', factor: 'speech'},
+        { id: 73, text: 'I tend to keep my feelings to myself.', factor: 'affect'},
+        { id: 74, text: 'People sometimes stare at me because of my odd appearance.', factor: 'behavior'}
+
+    ];
+
+        const attentionChecks = [
+        { id: 'AC1', text: 'This is an attention check, please select "Strongly Agree".', correct: 7 },
+        { id: 'AC2', text: 'This is an attention check, please select "Strongly Disagree".', correct: 1 },
+        ];
+
+        const factors = {
+        ideas: 0,
+        social: 0,
+        magic: 0,
+        perception: 0,
+        behavior: 0,
+        friends: 0,
+        speech: 0,
+        affect: 0,
+        suspicion: 0,
+        };
+
+        const options = [
+        { value: 1, label: 'Strongly Disagree' },
+        { value: 2, label: 'Disagree' },
+        { value: 3, label: 'Slightly Disagree' },
+        { value: 4, label: 'Neutral' },
+        { value: 5, label: 'Slightly Agree' },
+        { value: 6, label: 'Agree' },
+        { value: 7, label: 'Strongly Agree' },
+        ];
+
+        const randomizedQuestions = [...questions, ...attentionChecks].sort(() => Math.random() - 0.5);
+
+        function selectAnswer(questionId, value) {
+        answers[questionId] = value;
+        }
+
+        function submitData() {
+        const endTime = performance.now();
+        const timeTaken = (endTime - startTime) / 1000;
+        const data = { participant_id: participantID, spq_total: 0, spq_attention_fails: 0 };
+
+        randomizedQuestions.forEach((question) => {
+            const selectedValue = answers[question.id];
+            if (attentionChecks.some(ac => ac.id === question.id)) {
+                const attentionCheck = attentionChecks.find(ac => ac.id === question.id);
+                if (selectedValue !== attentionCheck.correct) data.spq_attention_fails++;
+                data[`attention_${question.id}`] = selectedValue;
+            } else {
+                factors[question.factor] += selectedValue;
+                data[`spq_q${question.id}`] = selectedValue;
+                data.spq_total += selectedValue;
+            }
+        });
+
+        Object.keys(factors).forEach(factor => { data[`spq_${factor}`] = factors[factor]; });
+        data['spq_time'] = timeTaken;
+
+        jatos.submitResultData(JSON.stringify(data)).then(() => jatos.startNextComponent());
+        }
+
+        // (Further UI and pagination logic should be added based on your setup)
+
+        // Initialize (assuming minimal UI setup for brevity)
+        randomizedQuestions.forEach(q => {
+        console.log(q.text);  // Replace this with actual rendering logic
+        });
+
+    </script>
+</body>
+</html>
