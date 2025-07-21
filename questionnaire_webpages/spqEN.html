@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Perception Inventory</title>
-    <link rel="stylesheet" href="../questionnaires/questionnaire_webpages/questionnaireStyles.css">
+    <link rel="stylesheet" href="questionnaireStyles.css">
     <style>
         /* Disabled button styling */
         .btn:disabled {
@@ -139,42 +139,78 @@
         { value: 7, label: 'Strongly Agree' },
         ];
 
-        const randomizedQuestions = [...questions, ...attentionChecks].sort(() => Math.random() - 0.5);
+        const orderedQuestions = [...questions];
+
+        function insertAttentionChecks() {
+            let positions = [];
+            while (positions.length < 2) {
+                let pos = Math.floor(Math.random() * (orderedQuestions.length - 1)) + 1;
+                if (!positions.includes(pos) && !positions.includes(pos - 1) && !positions.includes(pos + 1)) {
+                    positions.push(pos);
+                }
+            }
+            positions.sort((a, b) => a - b);
+            orderedQuestions.splice(positions[0], 0, attentionChecks[0]);
+            orderedQuestions.splice(positions[1], 0, attentionChecks[1]);
+        }
+
+        insertAttentionChecks();
 
         function selectAnswer(questionId, value) {
-        answers[questionId] = value;
+            answers[questionId] = value;
+        }
+
+        function calculateSubscores() {
+            const subscores = {
+                ideas: 0, social: 0, magic: 0, perception: 0, behavior: 0,
+                friends: 0, speech: 0, affect: 0, suspicion: 0
+            };
+
+            orderedQuestions.forEach((question) => {
+                if (!attentionChecks.some(ac => ac.id === question.id)) {
+                    subscores[question.factor] += answers[question.id];
+                }
+            });
+
+            return subscores;
         }
 
         function submitData() {
-        const endTime = performance.now();
-        const timeTaken = (endTime - startTime) / 1000;
-        const data = { participant_id: participantID, spq_total: 0, spq_attention_fails: 0 };
+            const endTime = performance.now();
+            const timeTaken = (endTime - startTime) / 1000;
 
-        randomizedQuestions.forEach((question) => {
-            const selectedValue = answers[question.id];
-            if (attentionChecks.some(ac => ac.id === question.id)) {
-                const attentionCheck = attentionChecks.find(ac => ac.id === question.id);
-                if (selectedValue !== attentionCheck.correct) data.spq_attention_fails++;
-                data[`attention_${question.id}`] = selectedValue;
-            } else {
-                factors[question.factor] += selectedValue;
-                data[`spq_q${question.id}`] = selectedValue;
-                data.spq_total += selectedValue;
-            }
-        });
+            const data = {
+                participant_id: participantID,
+                spq_total: 0,
+                spq_attention_fails: 0
+            };
 
-        Object.keys(factors).forEach(factor => { data[`spq_${factor}`] = factors[factor]; });
-        data['spq_time'] = timeTaken;
+            orderedQuestions.forEach((question) => {
+                const selectedValue = answers[question.id];
+                if (attentionChecks.some(ac => ac.id === question.id)) {
+                    const attentionCheck = attentionChecks.find(ac => ac.id === question.id);
+                    if (selectedValue !== attentionCheck.correct) data.spq_attention_fails++;
+                    data[`attention_${question.id}`] = selectedValue;
+                } else {
+                    data[`spq_q${question.id}`] = selectedValue;
+                    data.spq_total += selectedValue;
+                }
+            });
 
-        jatos.submitResultData(JSON.stringify(data)).then(() => jatos.startNextComponent());
+            const subscores = calculateSubscores();
+            Object.entries(subscores).forEach(([factor, score]) => {
+                data[`spq_${factor}`] = score;
+            });
+
+            data['spq_time'] = timeTaken;
+
+            jatos.submitResultData(JSON.stringify(data)).then(() => jatos.startNextComponent());
         }
 
-        // (Further UI and pagination logic should be added based on your setup)
-
-        // Initialize (assuming minimal UI setup for brevity)
-        randomizedQuestions.forEach(q => {
-        console.log(q.text);  // Replace this with actual rendering logic
+        orderedQuestions.forEach(q => {
+            console.log(q.text);
         });
+
 
     </script>
 </body>
