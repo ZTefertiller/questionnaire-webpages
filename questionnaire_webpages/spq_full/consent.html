@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        body {
+            font-family: 'Opendyslexic', Geneva, Tahoma, sans-serif;
+            font-size: 20;
+            line-height: 1.6;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            background-color: #f4f4f4;
+        }
+        .container {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            max-width: 600px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            
+        }
+        .buttons {
+            display: flex;
+            justify-content: space-between;
+        }
+        .button {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        .button.previous {
+            background-color: #ccc;
+            color: #666;
+        }
+        .button.previous.enabled {
+            background-color: #007BFF;
+            color: white;
+        }
+        .button.next {
+            background-color: #007BFF;
+            color: white;
+        }
+        .button.next.disabled {
+            background-color: #ccc;
+            color: #666;
+        }
+    </style>
+    <script src="jatos.js"></script>
+</head>
+<body>
+    <div class="container" id="page-1">
+        <div class="text-content instruct">
+            <p><strong>Hello and welcome to the experiment!</strong></p>
+            <p>We are pleased that you wish to take part in our study. Here, you will find all essential information. Please read this information carefully.</p>
+            <p><b><strong>It is important that when you begin the survey that you complete it start-to-finish in one sitting and not take any breaks.</strong></b></p>
+            <p><b>Before proceeding, if necessary please take this moment to stretch or grab a glass of water (this page will time out and redirect to Prolific after 5 minutes of inactivity).</b></p>
+            <p><b>IT IS IMPORTANT THAT YOU DO NOT EXIT THE BROWSER, LEAVE OR REFRESH THIS PAGE.</b></p>
+        </div>
+        <div class="buttons">
+            <button class="button previous" disabled>Previous</button>
+            <button class="button next" onclick="nextPage()">Next</button>
+        </div>
+    </div>
+
+    <div class="container" id="page-2" style="display: none;">
+        <div class="text-content">
+            <h2>Participant Information</h2>
+            <div class="instruct">
+                In this study, you will be filling out a questionnaire about personality traits and perceptual experiences. 
+                <p>The questionnaire should take about 10 minutes.</p>
+            </div>
+        </div>
+        <div class="buttons">
+            <button class="button previous enabled" onclick="previousPage()">Previous</button>
+            <button class="button next" onclick="nextPage()">Next</button>
+        </div>
+    </div>
+
+    <div class="container" id="page-3" style="display: none;">
+        <div class="scroll-box" id="scroll-box">
+            <p><b>Why is this study being conducted?</b></p>
+            <p>Every day we make decisions: how to get to work, what to eat, what to wear, etc. We want to see how people understand risk in the decisions they make.</p>
+            <br>
+
+            <p><b>Is there a personal benefit from participating in the study?</b></p>
+            <p>You will not gain any personal benefit from participating. The results of the study aim to advance our understanding of important cognitive processes.</p>
+            <br>
+            <p><b>Are there risks associated with participating in the study?</b></p>
+            <p>Since this study is conducted online, the risks are minimal. However, computer-based tasks can be surprisingly tiring. Take this moment to grab a drink of water or quickly use the restroom. We ask that you take your time with the questionnaires and do not stop once it is started. A full minute of inactivity in a questionnaire will result in removal from the study.</p>
+            <br>
+            <p><b>Will there be any additional costs?</b></p>
+            <p>There are no costs for you to participate in the study.</p>
+            <br>
+            <p><b>Will I receive compensation for my time?</b></p>
+            <p>You will receive €6.00 per hour. Upon completing the entire experiment, you will receive a total of €2.00 (paid through Prolific).</p>
+        </div>
+        <div class="buttons">
+            <button class="button previous enabled" onclick="previousPage()">Previous</button>
+            <button class="button next" id="next-button" onclick="nextPage()">Next</button>
+        </div>
+    </div>
+
+    <div class="container" id="page-4" style="display: none;">
+        <div class="scroll-box" id="scroll-box">
+            <p><b>What is expected of me?</b></p>
+            <p>We expect you to complete the questionnaire seated upright at a table or desk in a distraction-free environment (browser window maximized, sound on, and no music, tabs, or other applications in the background). Please silence your phone and place it out of sight for the entire duration. It is essential to answer the questions conscientiously.</p>
+            <br>
+            <p><b>Can I withdraw from the study later?</b></p>
+            <p>Your participation is voluntary, and you can withdraw from the study at any time without providing a reason and without any penalties. Once the data has been fully anonymized (excluding your pseudonymized Prolific ID), it will no longer be traceable to you, and deletion will no longer be possible from that point.</p>
+        </div>
+        <div class="buttons">
+            <button class="button previous enabled" onclick="previousPage()">Previous</button>
+            <button class="button next" id="next-button" onclick="nextPage()">Next</button>
+        </div>
+    </div>
+
+    <div class="container" id="page-5" style="display: none;">
+        <div class="text-content">
+            <h1>Data Privacy</h1>
+            <ul style="text-align: left">
+                <li>I agree that my personal data provided here, including behavioral data and questionnaire data, may be processed by the Technical University of Munich (www.tum.de/impressum) for conducting this study. Once data collection is complete, the data will be anonymized and stored as research data for up to ten years.</li>
+                <li>I may revoke my consent at any time for the future without affecting the legality of the processing based on consent before its revocation, according to Art. 6 para. 1 lit. a GDPR. After revoking your consent, your data will be immediately deleted from the study. Please send your revocation to (zachary.tefertiller@tum.de). </li>
+                <li>As a technical service provider, we use the Leibniz Supercomputing Centre (LRZ) of the Bavarian Academy of Sciences as the server host and Just Another Tool for Online Studies (JATOS) as a web-based frontend for the experiment. Participant recruitment is conducted via Prolific, using an anonymized ID system to avoid storing directly identifiable data. The LRZ is located at Boltzmannstraße 1, D-85748 Garching near Munich. Both Prolific and JATOS require the use of browser cookies to function, and by continuing you agree to the use of cookies.</li>
+                <li>You have the right to access, correct, delete, or restrict the processing of your data under legal conditions, as well as the right to object to processing and data portability. You also have the right to lodge a complaint with the Bavarian Data Protection Commissioner.</li>
+            <p>If you have questions, please feel free to contact us (zachary.tefertiller@tum.de) or our Data Protection Officer (www.datenschutz.tum.de).</p>
+            </ul>
+            <hr>
+            <p><span style="font-size: 24px"><em>Click 'Consent and Proceed' to provide consent and continue.</em><br>If you do not provide your consent and no longer wish to participate, <a href="https://app.prolific.com/submissions/complete?cc=CSJBUBWO" style="color: blue; text-decoration: underline;">please click here</a> to return to Prolific.</span></p>        </div>
+        <div class="buttons">
+            <button class="button previous enabled" onclick="previousPage()">Previous</button>
+            <button class="button next" onclick="finishStudy()">Consent and Proceed</button>
+        </div>
+    </div>
+    <script src="prolificLinks.js"></script>
+    <script src="introInactivity.js"></script>
+    <script>
+        const startTime = new Date().toISOString();
+        let currentPage = 1;
+
+        let prolificID = null;
+        jatos.onLoad(() => {
+            prolificID = jatos.studySessionData?.prolificID || 'test';
+            if (prolificID !== 'test') {
+                console.log("Participant ID from session data:", prolificID);
+            } else {
+                console.warn("Using fallback participant ID:", prolificID);
+            }
+        });
+
+        function nextPage() {
+            document.getElementById('page-' + currentPage).style.display = 'none';
+            currentPage++;
+            if (document.getElementById('page-' + currentPage)) {
+                document.getElementById('page-' + currentPage).style.display = 'block';
+            }
+            if (currentPage === 4) {
+                document.getElementById('page-4').style.display = 'block';
+            }
+        }
+
+        function previousPage() {
+            document.getElementById('page-' + currentPage).style.display = 'none';
+            currentPage--;
+            if (document.getElementById('page-' + currentPage)) {
+                document.getElementById('page-' + currentPage).style.display = 'block';
+            }
+        }
+
+        document.getElementById('scroll-box').addEventListener('scroll', function() {
+            const scrollBox = document.getElementById('scroll-box');
+            if (scrollBox.scrollTop + scrollBox.clientHeight >= scrollBox.scrollHeight) {
+                document.getElementById('next-button').disabled = false;
+                document.getElementById('next-button').classList.remove('disabled');
+            }
+        });
+
+        function finishStudy() {
+            const endTime = performance.now();
+            const timeTaken = (endTime - startTime) / 1000;
+            consentGiven = true;
+            jatos.submitResultData({
+                prolific_id: prolificID,
+                consent_given: consentGiven,
+                timestamp_start: startTime,
+                timestamp_end: new Date().toISOString()
+
+            });
+            jatos.startNextComponent();
+        }
+
+        window.addEventListener('beforeunload', function (event) {
+            const endTime = performance.now();
+            const timeTaken = (endTime - startTime) / 1000;
+            jatos.submitResultData({
+                prolific_id: prolificID,
+                consent_given: consentGiven,
+                timestamp_start: startTime,
+                timestamp_end: new Date().toISOString()
+            });
+            if (!consentGiven) {
+                jatos.submitResultData({
+                prolific_id: prolificID,
+                consent_given: consentGiven,
+                timestamp_start: startTime,
+                timestamp_end: new Date().toISOString()
+            });
+                // Avoid asynchronous calls; try a synchronous redirect
+                window.location.href = noConsentLink;
+            }
+        });
+
+
+    </script>
+</body>
+</html>
